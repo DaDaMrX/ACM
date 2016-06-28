@@ -14,7 +14,7 @@ int bfs(int n, int k)  
         int from = q.front(); q.pop();  
         int to = from - 1;  
         if (to >= 0 && step[to] == -1)  
-        {  
+        {  
             q.push(to);  
             step[to] = step[from] + 1;  
         }  
