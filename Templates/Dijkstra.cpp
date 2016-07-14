@@ -1,4 +1,18 @@
-//Djikstra algorithm
+/*
+Djikstra algorithm
+
+输入: map[N][N], n, start
+借助：vis[N]
+输出: dis[N]
+
+过程:
+	n-1次循环
+		找到最近点
+		标记
+		松弛
+
+注意: 两点距离不连通时距离为INF，可以用来比较，但不能想加，会溢出称为负值
+*/
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
