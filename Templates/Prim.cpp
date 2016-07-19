@@ -39,7 +39,6 @@ int prim()
 }
 int main()
 {
-    freopen("in.txt", "r", stdin);
     while (~scanf("%d%d", &n, &m))
     {
         memset(map, 0x7f, sizeof(map));
