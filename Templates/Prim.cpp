@@ -1,14 +1,15 @@
 /*
 Prim algorithm
+O(n^2)
 
 Input: map[N][N]
 Use: dis[N], vis[N]
 Output: ans
 
 PS:
-1. Like dijkstra algorithm
-2. 找到最近点，标记，更新
-2. dis[N]数组记录的不是每个点到起点的距离，而是到最小生成树的距离，更新是有不同
+    1. Like dijkstra algorithm
+    2. 找到最近点，标记，更新
+    2. dis[N]数组记录的不是每个点到起点的距离，而是到最小生成树的距离，更新是有不同
 */
 
 #include <cstdio>
@@ -55,16 +56,18 @@ int main()
 
 /*
 Sample Input
-7 9
+7 11
 1 3 1
 2 3 2
 3 4 3
+4 6 5
 2 5 10
 3 6 7
 4 7 5
 4 6 1
 5 6 5
 6 7 8
+3 4 7
 
 Sample Output
 17

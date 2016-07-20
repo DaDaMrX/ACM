@@ -5,8 +5,13 @@ build(i, left, right)
 qudate(i, left, right, key)
 query(i, left, right)
 
-全部自顶向下，递归
+PS:
+	1. 全部自顶向下，递归
+	2. update, 累加时用+=， 覆盖时用=
+	3. sum可换为maxx等
+	4. 可根据需要添加fa[N]或者P(i)
 */
+
 #include <cstdio>
 #include <cstring>
 #define N 20
@@ -14,20 +19,14 @@ struct node
 {
 	int l, r, sum, lazy;
 } tree[4 * N];
-int fa[N];
 int n, m;
 inline int L(int i) { return i << 1; }
 inline int R(int i) { return (i << 1) + 1; }
-inline int P(int i) { return i >> 1; }
 void build(int i, int left, int right)
 {
 	tree[i].l = left; tree[i].r = right;
 	tree[i].sum = 0; tree[i].lazy = 0;
-	if (left == right)
-	{
-		fa[left] = i;
-		return;
-	}
+	if (left == right) return;
 	int mid = left + (right - left >> 1);
 	build(L(i), left, mid);
 	build(R(i), mid + 1, right);
@@ -39,6 +38,7 @@ void pushdown(int i)
 	tree[L(i)].lazy += tree[i].lazy;
 	tree[R(i)].sum += (tree[R(i)].r - tree[R(i)].l + 1) * tree[i].lazy;
 	tree[R(i)].lazy += tree[i].lazy;
+	tree[i].lazy = 0;
 }
 void update(int i, int left, int right, int key)
 {
