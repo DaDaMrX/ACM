@@ -1,6 +1,6 @@
 /*
 快速幂
-PS: 有a*a这一运算，有溢出的可能性
+PS: 有a*a运算，有溢出的可能
 */
 int power(int a, int n, int m)
 {
