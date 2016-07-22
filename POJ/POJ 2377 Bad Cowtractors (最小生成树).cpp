@@ -1,16 +1,4 @@
-/*
-Kruskal algorithm
-O(mlogm)
-
-Input: e[M];
-Use: disjoint-set
-Output: ans
-
-PS:
-	1. e[M]存储无向边，按边权从小到大排序，依次检查，若不构成环就加入最小生成树
-	2. 加入的边数记在cnt中，一可以在找到n-1条边时跳出，二可以判断连通性
-*/
-#include <cstdio>
+﻿#include <cstdio>
 #include <cstring>
 #include <algorithm>
 using namespace std;
@@ -19,6 +7,8 @@ const int M = 2e4 + 10;
 struct Edge
 {
 	int a, b, w;
+	Edge() {};
+	Edge(int a, int b, int w) : a(a), b(b), w(w) {};
 } e[M];
 int fa[N], deep[N];
 int n, m;
@@ -48,13 +38,13 @@ bool same(int x, int y)
 }
 bool cmp(Edge e1, Edge e2)
 {
-	return e1.w < e2.w;
+	return e1.w > e2.w;
 }
 int kruskal()
 {
 	sort(e, e + m, cmp);
 	init(n);
-	int ans = 0, cnt = 0;
+	int cnt = 0, ans = 0;
 	for (int i = 0; i < m; i++)
 		if (!same(e[i].a, e[i].b))
 		{
@@ -68,27 +58,13 @@ int kruskal()
 }
 int main()
 {
-	while (~scanf("%d%d", &n, &m))
+	scanf("%d%d", &n, &m);
+	for (int i = 0; i < m; i++)
 	{
-		for (int i = 0; i < m; i++) 
-			scanf("%d%d%d", &e[i].a, &e[i].b, &e[i].w);
-		printf("%d\n", kruskal());
+		int a, b, w;
+		scanf("%d%d%d", &a, &b, &w);
+		e[i] = Edge(a, b, w);
 	}
+	printf("%d\n", kruskal());
 	return 0;
 }
-/*
-Sample Input
-7 9
-1 3 1
-2 3 2
-3 4 3
-2 5 10
-3 6 7
-4 7 5
-4 6 1
-5 6 5
-6 7 8
-
-Sample Output
-17
-*/
