@@ -12,7 +12,6 @@ PS:
     2. dis[N]数组记录的不是每个点到起点的距离，而是到最小生成树的距离，更新是有不同
     3. 如何判断不连通？
 */
-
 #include <cstdio>
 #include <cstring>
 #define N 20

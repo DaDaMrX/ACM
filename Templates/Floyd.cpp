@@ -2,11 +2,11 @@
 #include <cstring>
 #include <algorithm>
 using namespace std;
-#define N 20
-#define INF 0x7f7f7f7f
+const int INF = 0x7f7f7f7f;
+const int N = 1e3 + 10;
 int map[N][N];
 int n, m;
-void floyd(int n)
+void floyd(n)
 {
         for (int i = 1; i <= n; i++) map[i][i] = 0;
         for (int k = 1; k <= n; k++)
