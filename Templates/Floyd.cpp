@@ -1,62 +1,56 @@
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-using namespace std;
-const int INF = 0x7f7f7f7f;
-const int N = 1e3 + 10;
+/*
+Floyd algorithm
+有向图 无向图均可
+自己到自己的距离可以为初始化为0，也可以求出
+允许有负权边，但不允许有负环
+若初始化map[i][i]=0，运行后map[i][i]<0说明有负环
+*/
+
+//1. Floyd
 int map[N][N];
 int n, m;
-void floyd(n)
+void floyd()
 {
-        for (int i = 1; i <= n; i++) map[i][i] = 0;
-        for (int k = 1; k <= n; k++)
-            for (int i = 1; i <= n; i++)
-                for (int j = 1; j <= n; j++)
-                    if (map[i][k] < INF && map[k][j] < INF)
-                        map[i][j] = min(map[i][j], map[i][k] + map[k][j]);
-}
-int main()
-{
-    while (~scanf("%d%d", &n, &m))
-    {
-        memset(map, 0x7f, sizeof(map));
-        for (int i = 1; i <= m; i++)
-        {
-            int a, b, w;
-            scanf("%d%d%d", &a, &b, &w);
-            if (w < map[a][b]) map[a][b] = map[b][a] = w;
-        }
-        floyd(n);
-        for (int i = 1; i <= n; i++)
-        {
-            for (int j = 1; j < n; j++) printf("%d ", &map[i][j]);
-            printf("%d\n", map[i][n]);
-        }
-    }
-    return 0;
+	for (int i = 1; i <= n; i++) map[i][i] = 0;
+	for (int k = 1; k <= n; k++)
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++)
+				if (map[i][k] < INF && map[k][j] < INF)
+					map[i][j] = min(map[i][j], map[i][k] + map[k][j]);
 }
 
-/*
-Sample Input
-7 10
-1 2 2
-2 5 10
-5 7 5
-1 3 5
-2 3 4
-2 4 6
-5 6 3
-6 7 9
-3 4 2
-4 6 1
+//2. Floyd + 路径还原
+int map[N][N], pre[N][N];
+int n, m;
+void floyd()
+{
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++)
+			pre[i][j] = i;
+	for (int i = 1; i <= n; i++) map[i][i] = 0;
+	for (int k = 1; k <= n; k++)
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++)
+				if (map[i][k] < INF && map[k][j] < INF)
+				{
+					int sum = map[i][k] + map[k][j];
+					if (sum < map[i][j])
+					{
+						map[i][j] = sum;
+						pre[i][j] = pre[k][j];
+					}
+				}
+}
+void printPath(int from, int to)
+{
+	if (from == to)
+	{
+		printf("%d", from);
+		return;
+	}
+	printPath(from, pre[from][to]);
+	printf("-->%d", to);
+}
 
-Sample Output
-0 2 5 7 11 8 16
-2 0 4 6 10 7 15
-5 4 0 2 6 3 11
-7 6 2 0 4 1 9
-11 10 6 4 0 3 5
-8 7 3 1 3 0 8
-16 15 11 9 5 8 0
-
-*/
+//3. Floyd + 字典序路径
+?

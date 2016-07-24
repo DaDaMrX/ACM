@@ -1,75 +1,68 @@
 /*
 Djikstra algorithm
-
-Input: map[N][N], n, start
-Output: dis[N]
-
-过程:
-	n-1次循环
-		找到最近点
-		标记
-		松弛
-
-注意: 两点距离不连通时距离为INF，可以用来比较，但不能想加，会溢出称为负值
+有向图无向图均可
+自己到自己距离为0
+可以有负边，但不能有负环
+未优化的dijkstra可以有判断负环，优先队列优化后的不能判断负环
 */
 
-//1. Dijkstra + priority_queue + vector
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-#include <queue>
-#include <vector>
-#include <functional>
-using namespace std;
-const int N = 1e3 + 10;
-struct Edge 
-{ 
-	int to, w; 
+//1. Dijkstra + priority_queue
+struct Edge
+{
+	int to, w;
 	Edge() {};
 	Edge(int to, int w) : to(to), w(w) {};
 };
-typedef pair<int, int> pii;
 vector<Edge> vec[N];
 int dis[N];
 int n, m;
-priority_queue<pii, vector<pii>, greater<pii> > q;
+typedef pair<int, int> pii;
+priority_queue<pii, vector<pii>, greater<pii> > pq;
 void dijkstra(int start)
 {
 	memset(dis, 0x7f, sizeof(dis));
 	dis[start] = 0;
-	q.push(pii(0, start));
-	while (!q.empty())
+	while (!pq.empty()) pq.pop();
+	pq.push(pii(0, start));
+	while (!pq.empty())
 	{
-		pii p = q.top(); q.pop();
+		pii p = pq.top(); pq.pop();
 		int u = p.second;
+		if (dis[u] < p.first) continue;
 		for (int i = 0; i < vec[u].size(); i++)
 		{
 			Edge e = vec[u][i];
 			if (dis[u] + e.w < dis[e.to])
 			{
 				dis[e.to] = dis[u] + e.w;
-				q.push(pii(dis[e.to], e.to));
+				pq.push(pii(dis[e.to], e.to));
 			}
 		}
 	}
 }
-int main()
+
+//2. Dijkstra
+int map[N][N], dis[N];
+bool vis[N];
+int n, m;
+void dijkstra(int start)
 {
-	scanf("%d%d", &n, &m);
-	for (int i = 1; i <= n; i++) vec[i].clear();
-	for (int i = 1; i <= m; i++)
+	memset(dis, 0x7f, sizeof(dis));
+	dis[start] = 0;
+	memset(vis, false, sizeof(vis));
+	for (int i = 1; i <= n; i++)
 	{
-		int a, b, w;
-		scanf("%d%d%d", &a, &b, &w);
-		vec[a].push_back(Edge(b, w));
-		vec[b].push_back(Edge(a, w));
+		int mini = -1;
+		for (int j = 1; j <= n; j++)
+			if (!vis[j] && (mini == -1 || dis[j] < dis[mini])) mini = j;
+		vis[mini] = true;
+		for (int j = 1; j <= n; j++)
+			if (map[mini][j] < INF)	
+				dis[j] = min(dis[j], dis[mini] + map[mini][j]);
 	}
-	dijkstra(1);
-	for (int i = 1; i <= n; i++) printf("%d: %d\n", i, dis[i]);
-	return 0;
 }
 
-//2. dijkstra 次短路
+//3. dijkstra 次短路
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
@@ -131,48 +124,6 @@ int main()
 	dijkstra(1);
 	for (int i = 1; i <= n; i++)
 		printf("%d: %d %d\n", i, dis1[i], dis2[i]);
-	return 0;
-}
-
-//3. Dijkstra
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-using namespace std;
-#define N 20
-#define INF 0x7f7f7f7f
-int map[N][N], dis[N];
-bool vis[N];
-int n, m;
-void dijkstra(int start)
-{
-	memset(dis, 0x7f, sizeof(dis));
-	dis[start] = 0;
-	memset(vis, true, sizeof(vis));
-	for (int i = 2; i <= n; i++)
-	{
-		int mini = -1;
-		for (int j = 1; j <= n; j++)
-			if (vis[j] && (mini == -1 || dis[j] < dis[mini])) mini = j;
-		vis[mini] = false;
-		for (int j = 1; j <= n; j++)
-			if (map[mini][j] < INF)	dis[j] = min(dis[j], dis[mini] + map[mini][j]);
-	}
-}
-int main()
-{
-	while (~scanf("%d%d", &n, &m))
-	{
-		memset(map, 0x7f, sizeof(map));
-		for (int i = 1; i <= m; i++)
-		{
-			int a, b, w;
-			scanf("%d%d%d", &a, &b, &w);
-			if (w < map[a][b]) map[a][b] = map[b][a] = w;
-		}
-		dijkstra(1);
-		for (int i = 1; i <= n; i++) printf("%d: %d\n", i, dis[i]);
-	}
 	return 0;
 }
 

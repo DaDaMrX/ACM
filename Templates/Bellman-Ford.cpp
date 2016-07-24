@@ -2,61 +2,89 @@
 Bellman-Ford algorithm
 有向图，可以有负边， 可以判负环
 */
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-using namespace std;
-const int N = 1e3 + 10;
-const int M = 1e4 + 10;
-struct Graph
+
+//SPFA + vec
+struct Edge
 {
-	int n, m;
-	struct Edge
-	{
-		int from, to, w;
-		Edge() {};
-		Edge(int from, int to, int w) : from(from), to(to), w(w) {};
-	} e[M];
-	void setEdge(int n, int m);
-	int dis[N];
-	void bellman(int start);
+	int to, w;
+	Edge() {};
+	Edge(int to, int w) : to(to), w(w) {};
 };
-void Graph::setEdge(int n, int m)
-{
-	this->n = n; this->m = m;
-	for (int i = 1; i <= m; i++)
-	{
-		int from, to, w;
-		scanf("%d%d%d", &from, &to, &w);
-		e[i] = Edge(from, to, w);
-	}
-}
-void Graph::bellman(int start)
+vector<Edge> vec[N];
+int dis[N];
+bool vis[N];
+int n, m;
+queue<int> q;
+void SPFA(int start)
 {
 	memset(dis, 0x7f, sizeof(dis));
-	this->dis[start] = 0;
-	for (int i = 1; i < n; i++)
+	dis[start] = 0;
+	memset(vis, false, sizeof(vis));
+	while (!q.empty()) q.pop();
+	q.push(start); vis[start] = true;
+	while (!q.empty())
 	{
-		for (int j = 1; j <= m; j++)
+		int u = q.front(); q.pop(); vis[u] = false;
+		for (int i = 0; i < vec[u].size(); i++)
 		{
-			if (dis[e[j].from] < 0x7f7f7f7f)
-				dis[e[j].to] = min(dis[e[j].to], dis[e[j].from] + e[j].w);
+			Edge e = vec[u][i];
+			int sum = dis[u] + e.w;
+			if (sum < dis[e.to])
+			{
+				dis[e.to] = sum;
+				if (!vis[e.to]) q.push(e.to), vis[e.to] = true;
+			}
 		}
 	}
 }
-Graph G;
-int main()
+
+//SPFA + map
+int map[N][N], dis[N];
+bool vis[N];
+int n, m;
+queue<int> q;
+void SPFA(int start)
 {
-	int n, m;
-	while (~scanf("%d%d", &n, &m))
+	memset(dis, 0x7f, sizeof(dis));
+	dis[start] = 0;
+	memset(vis, false, sizeof(vis));
+	while (!q.empty()) q.pop();
+	q.push(start); vis[start] = true;
+	while (!q.empty())
 	{
-		G.setEdge(n, m);
-		G.bellman(1);
+		int u = q.front(); q.pop(); vis[u] = false;
 		for (int i = 1; i <= n; i++)
-			printf("%d: %d\n", i, G.dis[i]);
+			if (map[u][i] < INF)
+			{
+				int sum = dis[u] + map[u][i];
+				if (sum < dis[i])
+				{
+					dis[i] = sum;
+					if (!vis[i]) q.push(i), vis[i] = true;
+				}
+			}
 	}
-	return 0;
 }
+
+//Bellman-Ford
+struct Edge
+{
+	int from, to, w;
+	Edge() {};
+	Edge(int from, int to, int w) : from(from), to(to), w(w) {};
+} e[M];
+int dis[N];
+bool vis[N];
+void bellman(int start)
+{
+	memset(dis, 0x7f, sizeof(dis));
+	dis[start] = 0;
+	for (int i = 1; i < n; i++)
+		for (int j = 1; j <= m; j++)
+			if (dis[e[j].from] < INF)
+				dis[e[j].to] = min(dis[e[j].to], dis[e[j].from] + e[j].w);
+}
+
 /*
 Sample Input:
 6 10
