@@ -1,8 +1,5 @@
 /*
 Djikstra algorithm
-有向图无向图均可
-自己到自己距离为0
-可以有负边，但不能有负环
 未优化的dijkstra可以有判断负环，优先队列优化后的不能判断负环
 */
 
@@ -14,8 +11,10 @@ struct Edge
 	Edge(int to, int w) : to(to), w(w) {};
 };
 vector<Edge> vec[N];
+
 int dis[N];
 int n, m;
+
 typedef pair<int, int> pii;
 priority_queue<pii, vector<pii>, greater<pii> > pq;
 void dijkstra(int start)
@@ -29,17 +28,45 @@ void dijkstra(int start)
 		pii p = pq.top(); pq.pop();
 		int u = p.second;
 		if (dis[u] < p.first) continue;
-		for (int i = 0; i < vec[u].size(); i++)
+		for (auto e : vec[u])
 		{
-			Edge e = vec[u][i];
-			if (dis[u] + e.w < dis[e.to])
+			int sum = dis[u] + e.w;
+			if (sum < dis[e.to])
 			{
-				dis[e.to] = dis[u] + e.w;
+				dis[e.to] = sum;
 				pq.push(pii(dis[e.to], e.to));
 			}
 		}
 	}
 }
+
+//建图
+scanf("%d%d", &n, &m);
+for (int i = 1; i <= n; i++) vec[i].clear();
+for (int i = 1; i <= m; i++)
+{
+	int a, b, w;
+	scanf("%d%d%d", &a, &b, &w);
+	vec[a].push_back(Edge(b, w));
+	vec[b].push_back(Edge(a, w));
+}
+
+//静态链表
+struct Edge
+{
+	int to, next;
+} e[N * 2];
+int head[N], num;
+
+void add(int u, int v)
+{
+	e[num].to = v;
+	e[num].next = head[u];
+	head[u] = num++;
+}
+
+memset(head, -1, sizeof(head));
+num = 0;
 
 //2. Dijkstra
 int map[N][N], dis[N];
@@ -62,7 +89,17 @@ void dijkstra(int start)
 	}
 }
 
-//3. dijkstra 次短路
+//建图
+scanf("%d%d", &n, &m);
+memset(map, 0, sizeof(map));
+for (int i = 1; i <= m; i++)
+{
+	int a, b, w;
+	scanf("%d%d%d", &a, &b, &w);
+	if (w < map[a][b]) map[a][b] = map[b][a] = w;
+}
+
+//3. dijkstra 次短路*
 #include <cstdio>
 #include <cstring>
 #include <algorithm>

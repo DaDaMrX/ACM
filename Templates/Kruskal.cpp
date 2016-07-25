@@ -1,27 +1,17 @@
 /*
 Kruskal algorithm
-O(mlogm)
+O(ElogE)
 
-Input: e[M];
-Use: disjoint-set
-Output: ans
-
-PS:
-	1. e[M]存储无向边，按边权从小到大排序，依次检查，若不构成环就加入最小生成树
-	2. 加入的边数记在cnt中，一可以在找到n-1条边时跳出，二可以判断连通性
+1. e[M]存储无向边，按边权从小到大排序，依次检查，若不构成环就加入最小生成树
+2. 加入的边数记在cnt中，一可以在找到n-1条边时跳出，二可以判断连通性
 */
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-using namespace std;
-const int N = 1e3 + 10;
-const int M = 2e4 + 10;
 struct Edge
 {
 	int a, b, w;
 } e[M];
-int fa[N], deep[N];
 int n, m;
+
+int fa[N], deep[N];
 void init(int n)
 {
 	for (int i = 1; i <= n; i++) fa[i] = i, deep[i] = 0;
@@ -46,6 +36,7 @@ bool same(int x, int y)
 {
 	return find(x) == find(y);
 }
+
 bool cmp(Edge e1, Edge e2)
 {
 	return e1.w < e2.w;

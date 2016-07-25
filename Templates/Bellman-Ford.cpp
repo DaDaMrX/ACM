@@ -1,6 +1,7 @@
 ﻿/*
 Bellman-Ford algorithm
-有向图，可以有负边， 可以判负环
+SPFA while循环，不能判负环
+Bellman-Ford for循环，可以判负环
 */
 
 //SPFA + vec
