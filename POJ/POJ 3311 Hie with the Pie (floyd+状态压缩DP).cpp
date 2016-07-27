@@ -28,16 +28,22 @@ int main()
 
 		floyd();
 
-		memset(dp, 0x3f, sizeof(dp));
-		dp[(1 << n) - 1][0] = 0;
+		for (int S = 0; S < (1 << n); S++)
+			for (int i = 0; i < n; i++)
+			{
+				if (!(S & (1 << i))) continue;
+				if (S == (1 << i))
+				{
+					dp[S][i] = map[0][i];
+					continue;
+				}
+				dp[S][i] = INF;
+				for (int j = 0; j < n; j++)
+					if (S & (1 << j) && j != i)
+						dp[S][i] = min(dp[S][i], dp[S & ~(1 << i)][j] + map[j][i]);
+			}
 
-		for (int S = (1 << n) - 2; S >= 0; S--)
-			for (int v = 0; v < n; v++)
-				for (int u = 0; u < n; u++)
-					if (!(S >> u & 1) && dp[S | 1 << u][u] < INF)
-						dp[S][v] = min(dp[S][v], dp[S | 1 << u][u] + map[v][u]);
-
-		printf("%d\n", dp[0][0]);
+		printf("%d\n", dp[(1 << n) - 1][0]);
 	}
 	return 0;
 }

@@ -1,3 +1,39 @@
+//dfs+状态压缩
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+const int INF = 0x7f7f7f7f;
+const int N = 1e3 + 10;
+int n, ans;
+inline int lowbit(int x) { return x & -x; }
+void dfs(int i, int left, int col, int right)
+{
+	if (i > n)
+	{
+		ans++;
+		return;
+	}
+	int mask = (1 << n) - 1 & ~(left | col | right);
+	while (mask)
+	{
+		int now = lowbit(mask);
+		mask -= now;
+		dfs(i + 1, (left | now) << 1, col | now, (right | now) >> 1);
+	}
+}
+int main()
+{
+	while (scanf("%d", &n), n)
+	{
+		ans = 0;
+		dfs(1, 0, 0, 0);
+		printf("%d\n", ans);
+	}
+	return 0;
+}
+
+//dfs
 #include <cstdio>
 #include <cstring>
 #define N 15
