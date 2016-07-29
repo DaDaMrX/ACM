@@ -1,4 +1,30 @@
-//建图-静态链表-无边权
+//graph-head-weight
+struct Edge
+{
+	int to, w, next;
+} e[N * 2];
+int head[N], tol;
+int n, m;
+
+void add(int u, int v, int w)
+{
+	e[tol].to = v;
+	e[tol].w = w;
+	e[tol].next = head[u];
+	head[u] = tol++;
+}
+
+scanf("%d%d", &n, &m);
+memset(head, -1, sizeof(head));
+tol = 0;
+for (int i = 1; i <= m; i++)
+{
+	int a, b, w;
+	scanf("%d%d%d", &a, &b, &w);
+	add(a, b, w);
+}
+
+//graph-head
 struct Edge
 {
 	int to, next;
@@ -24,7 +50,7 @@ for (int i = 1; i <= m; i++)
 	add(b, a);
 }
 
-//建图-vec-有边权
+//graph-vec-weight
 struct Edge
 {
 	int to, w;
@@ -44,7 +70,7 @@ for (int i = 1; i <= m; i++)
 	vec[b].push_back(Edge(a, w));
 }
 
-//建图-map
+//graph-map
 int map[N][N]
 int n, m;
 
@@ -52,12 +78,12 @@ scanf("%d%d", &n, &m);
 memset(map, 0x7f, sizeof(map));
 for (int i = 1; i <= m; i++)
 {
-    int a, b, w;
-    scanf("%d%d%d", &a, &b, &w);
-    if (w < map[a][b]) map[a][b] = map[b][a] = w;
+	int a, b, w;
+	scanf("%d%d%d", &a, &b, &w);
+	if (w < map[a][b]) map[a][b] = map[b][a] = w;
 }
 
-//Dijkstra-priority_queue-vec
+//dijkstra-priority_queue-vec
 #include <queue>
 struct Edge
 {
@@ -82,9 +108,9 @@ void dijkstra(int start)
 		pii p = pq.top(); pq.pop();
 		int u = p.second;
 		if (dis[u] < p.first) continue;
-        for (int j = 0; j < vec[u].size(); j++)
+		for (int j = 0; j < vec[u].size(); j++)
 		{
-            Edge e = vec[u][j];
+			Edge e = vec[u][j];
 			int sum = dis[u] + e.w;
 			if (sum < dis[e.to])
 			{
@@ -95,7 +121,7 @@ void dijkstra(int start)
 	}
 }
 
-//Dijkstra-map
+//dijkstra-map
 int map[N][N], dis[N];
 bool vis[N];
 int n, m;
@@ -111,12 +137,58 @@ void dijkstra(int start)
 			if (!vis[j] && (mini == -1 || dis[j] < dis[mini])) mini = j;
 		vis[mini] = true;
 		for (int j = 1; j <= n; j++)
-			if (map[mini][j] < INF)	
+			if (map[mini][j] < INF)
 				dis[j] = min(dis[j], dis[mini] + map[mini][j]);
 	}
 }
 
-//SPFA-vec
+//dijkstra-priority_queue-vec-second shortest path
+#include <queue>
+struct Edge
+{
+	int to, w;
+	Edge() {};
+	Edge(int to, int w) : to(to), w(w) {};
+};
+vector<Edge> vec[N];
+int n, m;
+
+int dis1[N], dis2[N];
+typedef pair<int, int> pii;
+priority_queue<pii, vector<pii>, greater<pii> > pq;
+void dijkstra(int start)
+{
+	memset(dis1, 0x7f, sizeof(dis1));
+	memset(dis2, 0x7f, sizeof(dis2));
+	dis1[start] = 0;
+	while (!pq.empty()) pq.pop();
+	pq.push(pii(0, start));
+	while (!pq.empty())
+	{
+		pii p = pq.top(); pq.pop();
+		int u = p.second, d = p.first;
+		if (dis2[u] < d) continue;
+		for (int j = 0; j < vec[u].size(); j++)
+		{
+			Edge e = vec[u][j];
+			int sum = d + e.w;
+			if (sum < dis1[e.to])
+			{
+				dis2[e.to] = dis1[e.to];
+				dis1[e.to] = sum;
+				pq.push(pii(dis1[e.to], e.to));
+				pq.push(pii(dis2[e.to], e.to));
+			}
+			else if (sum > dis1[e.to] && sum < dis2[e.to])
+			{
+				dis2[e.to] = sum;
+				pq.push(pii(dis2[e.to], e.to));
+			}
+		}
+	}
+}
+
+//spfa-vec
 #include <queue>
 struct Edge
 {
@@ -153,7 +225,7 @@ void SPFA(int start)
 	}
 }
 
-//SPFA-map
+//spfa-map
 #include <queue>
 int map[N][N], dis[N];
 int n, m;
@@ -183,15 +255,16 @@ void SPFA(int start)
 	}
 }
 
-//Bellman-Ford-e
+//bellman-ford-e
 struct Edge
 {
 	int from, to, w;
 	Edge() {};
 	Edge(int from, int to, int w) : from(from), to(to), w(w) {};
 } e[M];
+int n, m;
+
 int dis[N];
-bool vis[N];
 void bellman(int start)
 {
 	memset(dis, 0x7f, sizeof(dis));
@@ -202,7 +275,7 @@ void bellman(int start)
 				dis[e[j].to] = min(dis[e[j].to], dis[e[j].from] + e[j].w);
 }
 
-//Floyd-map
+//floyd-map
 int map[N][N];
 int n, m;
 
@@ -216,7 +289,7 @@ void floyd()
 					map[i][j] = min(map[i][j], map[i][k] + map[k][j]);
 }
 
-//Floyd-map-路径还原
+//floyd-map-path
 int map[N][N], pre[N][N];
 int n, m;
 
@@ -251,7 +324,7 @@ void printPath(int from, int to)
 	printf("-->%d", to);
 }
 
-//Kruskal-e
+//kruskal-e
 struct Edge
 {
 	int a, b, w;
@@ -305,28 +378,28 @@ int kruskal()
 	return ans;
 }
 
-//Prim-map
+//prim-map
 int map[N][N], dis[N];
 int n, m;
 
 bool vis[N];
 int prim()
 {
-    memset(dis, 0x7f, sizeof(dis));
-    dis[1] = 0;
-    memset(vis, true, sizeof(vis));
-    int ans = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        int mini = -1;
-        for (int j = 1; j <= n; j++)
-            if (vis[j] && (mini == -1 || dis[j] < dis[mini]))
-                mini = j;
-        vis[mini] = false;
-        ans += dis[mini];
-        for (int j = 1; j <= n; j++)
-            if (vis[j] && map[mini][j] < dis[j])
-                dis[j] = map[mini][j];
-    }
-    return ans;
+	memset(dis, 0x7f, sizeof(dis));
+	dis[1] = 0;
+	memset(vis, true, sizeof(vis));
+	int ans = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		int mini = -1;
+		for (int j = 1; j <= n; j++)
+			if (vis[j] && (mini == -1 || dis[j] < dis[mini]))
+				mini = j;
+		vis[mini] = false;
+		ans += dis[mini];
+		for (int j = 1; j <= n; j++)
+			if (vis[j] && map[mini][j] < dis[j])
+				dis[j] = map[mini][j];
+	}
+	return ans;
 }
