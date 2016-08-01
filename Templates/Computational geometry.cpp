@@ -27,37 +27,63 @@ double cross(Vector A, Vector B)
 {
 	return A.x * B.y - B.x * A.y;
 }
+int sgn(double x)
+{
+	if (abs(x) < eps) return 0;
+	if (x < 0) return -1;
+	return 1;
+}
 bool intersection(Segment seg1, Segment seg2)
 {
-	Vector vec = seg1.b - seg1.a;
-	Vector vec1 = seg2.a - seg1.a;
-	Vector vec2 = seg2.b - seg1.a;
-	bool b1 = (cross(vec1, vec) * cross(vec2, vec) < 0);
-	vec = seg2.b - seg2.a;
-	vec1 = seg1.a - seg2.a;
-	vec2 = seg1.b - seg2.a;
-	bool b2 = (cross(vec1, vec) * cross(vec2, vec) < 0);
-	return b1 && b2;
+	return
+		min(seg1.a.x, seg1.b.x) <= max(seg2.a.x, seg2.b.x) &&
+		min(seg2.a.x, seg2.b.x) <= max(seg1.a.x, seg1.b.x) &&
+		min(seg1.a.y, seg1.b.x) <= max(seg2.a.y, seg2.b.y) &&
+		min(seg2.a.y, seg2.b.y) <= max(seg1.a.y, seg1.a.y) &&
+		sgn(cross(seg1.b - seg1.a, seg2.a - seg1.a)) * sgn(cross(seg1.b - seg1.a, seg2.b - seg1.a)) <= 0 &&
+		sgn(cross(seg2.b - seg2.a, seg1.a - seg2.a)) * sgn(cross(seg2.b - seg2.a, seg1.b - seg2.a)) <= 0;
 }
-double distan(Point p1, Point p2)
+double norm(Vector A)
 {
-	double dx = p2.x - p1.x, dy = p2.y - p1.y;
-	return sqrt(dx * dx + dy * dy);
+	return sqrt(A.x * A.x + A.y * A.y);
 }
-bool online(Point p, Segment seg)
+double dist(Point p1, Point p2)
 {
-	return abs(cross(p - seg.a, seg.b - seg.a)) < eps;
+	return norm(p2 - p1);
 }
-bool inrec(Point p, Segment seg)
+double dist(Point p, Segment seg)
 {
-	double xleft, xright, yup, ydown;
-	if (seg.a.x < seg.b.x) xleft = seg.a.x, xright = seg.b.x;
-	else xleft = seg.b.x, xright = seg.a.x;
-	if (seg.a.y < seg.b.y) ydown = seg.a.y, yup = seg.b.y;
-	else ydown = seg.b.y, yup = seg.a.y;
-	return (p.x >= xleft && p.x <= xright && p.y >= ydown && p.y <= yup);
+	return abs(cross(seg.b - seg.a, p - seg.a)) / norm(seg.b - seg.a);
 }
-bool onseg(Point p, Segment seg)
+
+int n;
+Point p[4 * N], convex[4 * N];
+Point refer;
+
+bool cmp1(Point p1, Point p2)
 {
-	return online(p, seg) && inrec(p, seg);
+	if (abs(p1.y - p2.y) > eps) return p1.y < p2.y;
+	return p1.x < p2.x;
+}
+bool cmp2(Point p1, Point p2)
+{
+	double c = cross(p1 - refer, p2 - refer);
+	if (abs(c) > eps) return c > 0;
+	return norm(p1 - refer) < norm(p2 - refer);
+}
+int graham(int n)
+{
+	sort(p + 1, p + 1 + n, cmp1);
+	refer = p[1];
+	sort(p + 2, p + 1 + n, cmp2);
+	int m = 0;
+	convex[m++] = p[1];
+	convex[m++] = p[2];
+	for (int i = 3; i <= n; i++)
+	{
+		while (cross(p[i] - convex[m - 1], convex[m - 1] - convex[m -2]) > 0)
+			m--;
+		convex[m++] = p[i];
+	}
+	return m;
 }
