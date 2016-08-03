@@ -7,6 +7,7 @@ POJ 2429 GCD & LCM Inverse (数论+素数判定Miller-Rabin+素因子分解Polla
 而在素数判定时，同样的由于数会很大所以要用Miller-Rabin判定，
 对于比较小的数可以首先打一个素数表来判断，
 当对t素因子分解后，2^res枚举a/g应含的素因子（res为t的素因子数）更新最优解即可
+PS：交C++ AC，交G++ WA
 */
 #include <cstdio>
 #include <cstring>
