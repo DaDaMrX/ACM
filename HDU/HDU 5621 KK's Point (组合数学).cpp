@@ -1,5 +1,5 @@
 ﻿/*
-HDU 5621 KK's Point (数学)
+HDU 5621 KK's Point (组合数学)
 1.没有重复交点，ans=C(n,4) + n = n(n-1)(n-2)(n-3)/24
 2.n=1e5, n(n-1)(n-2)(n-3)超long long，也超unsigned long long
 3.边除边乘，任意2个相邻的数中一定有一个是2的倍数，任意3个相邻的数中一定有一个是3的倍数
