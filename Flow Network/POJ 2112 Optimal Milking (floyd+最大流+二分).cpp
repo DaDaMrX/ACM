@@ -13,7 +13,7 @@ using namespace std;
 typedef long long ll;
 const int INF = 0x7f7f7f7f;
 const int N = 250;
-const int M = 15000;
+const int M = 8000;
 
 int k, c, m, n;
 int map[N][N];
@@ -27,77 +27,78 @@ void floyd(int n)
 					map[i][j] = min(map[i][j], map[i][k] + map[k][j]);
 }
 
-int head[N], cur[N], d[N], st[M], s, e, no;
-
-struct point {
-	int u, v, flow, next;
-	point() {};
-	point(int x, int y, int z, int w) :u(x), v(y), next(z), flow(w) {};
-}p[M];
-
-void add(int x, int y, int z) {
-	p[no] = point(x, y, head[x], z);	head[x] = no++;
-	p[no] = point(y, x, head[y], 0);	head[y] = no++;
-}
-void init() {
+struct Edge
+{
+	int to, c, next;
+	Edge() {};
+	Edge(int to, int c, int next) : to(to), c(c), next(next) {};
+} edge[2 * M];
+int head[N], no;
+void init()
+{
 	memset(head, -1, sizeof(head));
 	no = 0;
 }
-
-bool bfs() {
-	int i, x, y;
-	queue<int>q;
-	memset(d, -1, sizeof(d));
-	d[s] = 0;	q.push(s);
-	while (!q.empty()) {
-		x = q.front();	q.pop();
-		for (i = head[x]; i != -1; i = p[i].next) {
-			if (p[i].flow && d[y = p[i].v] < 0) {
-				d[y] = d[x] + 1;
-				if (y == e)	return true;
-				q.push(y);
+void add(int u, int v, int c)
+{
+	edge[no] = Edge(v, c, head[u]);
+	head[u] = no++;
+	edge[no] = Edge(u, 0, head[v]);
+	head[v] = no++;
+}
+queue<int> q;
+int level[N];
+bool bfs(int s, int t)
+{
+	while (!q.empty()) q.pop();
+	memset(level, -1, sizeof(level));
+	level[s] = 0; q.push(s);
+	while (!q.empty())
+	{
+		int u = q.front(); q.pop();
+		for (int i = head[u]; i != -1; i = edge[i].next)
+		{
+			Edge &e = edge[i];
+			if (e.c && level[e.to] < 0)
+			{
+				level[e.to] = level[u] + 1;
+				if (e.to == t) return true;
+				q.push(e.to);
 			}
 		}
 	}
 	return false;
 }
-
-int dinic() {
-	int i, loc, top, x = s, nowflow, maxflow = 0;
-	while (bfs()) {
-		for (i = s; i <= e; i++)	cur[i] = head[i];
-		top = 0;
-		while (true) {
-			if (x == e) {
-				nowflow = INF;
-				for (i = 0; i < top; i++) {
-					if (nowflow > p[st[i]].flow) {
-						nowflow = p[st[i]].flow;
-						loc = i;
-					}
-				}
-				for (i = 0; i < top; i++) {
-					p[st[i]].flow -= nowflow;
-					p[st[i] ^ 1].flow += nowflow;
-				}
-				maxflow += nowflow;
-				top = loc;	x = p[st[top]].u;
-			}
-			for (i = cur[x]; i != -1; i = p[i].next)
-				if (p[i].flow && d[p[i].v] == d[x] + 1) break;
-			cur[x] = i;
-			if (i != -1) {
-				st[top++] = i;
-				x = p[i].v;
-			}
-			else {
-				if (!top)	break;
-				d[x] = -1;
-				x = p[st[--top]].u;
+int cur[N];
+int dfs(int u, int t, int flow)
+{
+	if (u == t) return flow;
+	for (int i = cur[u]; i != -1; i = edge[i].next)
+	{
+		Edge &e = edge[i];
+		if (e.c && level[e.to] > level[u])
+		{
+			int f = dfs(e.to, t, min(flow, e.c));
+			if (f)
+			{
+				e.c -= f;
+				edge[i ^ 1].c += f;
+				return f;
 			}
 		}
 	}
-	return maxflow;
+	return 0;
+}
+int dinic(int s, int t)
+{
+	int flow = 0;
+	while (bfs(s, t))
+	{
+		for (int i = s; i <= t; i++) cur[i] = head[i];
+		int f;
+		while (f = dfs(s, t, INF)) flow += f;
+	}
+	return flow;
 }
 
 void build(int d)
@@ -106,7 +107,6 @@ void build(int d)
 	for (int i = 1; i <= k; i++)
 		for (int j = k + 1; j <= n; j++)
 			if (map[i][j] <= d) add(i, j, 1);
-	s = 0; e = n + 1;
 	for (int i = 1; i <= k; i++) add(0, i, m);
 	for (int j = k + 1; j <= n; j++) add(j, n + 1, 1);
 }
@@ -133,11 +133,10 @@ int main()
 	{
 		int mid = left + (right - left >> 1);
 		build(mid);
-		if (dinic() == c) right = mid;
+		if (dinic(0, n + 1) == c) right = mid;
 		else left = mid;
 	}
 
 	printf("%d\n", right);
-
 	return 0;
 }

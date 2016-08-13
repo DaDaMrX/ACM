@@ -1,5 +1,5 @@
 ﻿/*
-HDU 1532 Drainage Ditches (最大流)
+HDU 3879 Base Station (最大权闭合图)
 */
 #include <cstdio>
 #include <cstring>
@@ -8,35 +8,39 @@ HDU 1532 Drainage Ditches (最大流)
 using namespace std;
 typedef long long ll;
 const int INF = 0x7f7f7f7f;
-const int N = 210;
-const int M = 210;
+const int N = 55010;
+const int M = 555005;
 
 int head[N], cur[N], d[N], st[M], s, e, no;
-
-struct point {
+struct point
+{
 	int u, v, flow, next;
 	point() {};
-	point(int x, int y, int z, int w) :u(x), v(y), next(z), flow(w) {};
-}p[2 * M];
-
-void add(int x, int y, int z) {
-	p[no] = point(x, y, head[x], z);	head[x] = no++;
-	p[no] = point(y, x, head[y], 0);	head[y] = no++;
+	point(int x, int y, int z, int w) : u(x), v(y), next(z), flow(w) {};
+} p[M];
+void add(int x, int y, int z)
+{
+	p[no] = point(x, y, head[x], z); head[x] = no++;
+	p[no] = point(y, x, head[y], 0); head[y] = no++;
 }
-void init() {
+void init()
+{
 	memset(head, -1, sizeof(head));
 	no = 0;
 }
-
-bool bfs() {
+bool bfs()
+{
 	int i, x, y;
 	queue<int>q;
 	memset(d, -1, sizeof(d));
-	d[s] = 0;	q.push(s);
-	while (!q.empty()) {
+	d[s] = 0; q.push(s);
+	while (!q.empty())
+	{
 		x = q.front();	q.pop();
-		for (i = head[x]; i != -1; i = p[i].next) {
-			if (p[i].flow && d[y = p[i].v] < 0) {
+		for (i = head[x]; i != -1; i = p[i].next)
+		{
+			if (p[i].flow && d[y = p[i].v] < 0)
+			{
 				d[y] = d[x] + 1;
 				if (y == e)	return true;
 				q.push(y);
@@ -45,22 +49,28 @@ bool bfs() {
 	}
 	return false;
 }
-
-int dinic() {
+int dinic()
+{
 	int i, loc, top, x = s, nowflow, maxflow = 0;
-	while (bfs()) {
+	while (bfs())
+	{
 		for (i = s; i <= e; i++)	cur[i] = head[i];
 		top = 0;
-		while (true) {
-			if (x == e) {
+		while (true)
+		{
+			if (x == e)
+			{
 				nowflow = INF;
-				for (i = 0; i < top; i++) {
-					if (nowflow > p[st[i]].flow) {
+				for (i = 0; i < top; i++)
+				{
+					if (nowflow > p[st[i]].flow)
+					{
 						nowflow = p[st[i]].flow;
 						loc = i;
 					}
 				}
-				for (i = 0; i < top; i++) {
+				for (i = 0; i < top; i++)
+				{
 					p[st[i]].flow -= nowflow;
 					p[st[i] ^ 1].flow += nowflow;
 				}
@@ -70,12 +80,14 @@ int dinic() {
 			for (i = cur[x]; i != -1; i = p[i].next)
 				if (p[i].flow && d[p[i].v] == d[x] + 1) break;
 			cur[x] = i;
-			if (i != -1) {
+			if (i != -1)
+			{
 				st[top++] = i;
 				x = p[i].v;
 			}
-			else {
-				if (!top)	break;
+			else
+			{
+				if (!top) break;
 				d[x] = -1;
 				x = p[st[--top]].u;
 			}
@@ -89,15 +101,25 @@ int main()
 	int n, m;
 	while (~scanf("%d%d", &n, &m))
 	{
-		s = 1; e = m;
 		init();
-		while (n--)
+		s = 0; e = n + m + 1;
+		for (int i = 1; i <= n; i++)
+		{
+			int p;
+			scanf("%d", &p);
+			add(i, e, p);
+		}
+		int sum = 0;
+		for (int i = n + 1; i <= n + m; i++)
 		{
 			int a, b, c;
 			scanf("%d%d%d", &a, &b, &c);
-			add(a, b, c);
+			add(i, a, INF);
+			add(i, b, INF);
+			add(s, i, c);
+			sum += c;
 		}
-		printf("%d\n", dinic());
+		printf("%d\n", sum - dinic());
 	}
 	return 0;
 }
