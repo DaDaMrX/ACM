@@ -1,5 +1,11 @@
 ﻿/*
-HDU 3879 Base Station (最大权闭合图)
+HDU 5772 String problem (最大权闭合子图)
+考虑三种点
+1.Pij(1<=i< j<=n)，表示子序列中有第i个字符和第j个字符，这个点的点权是w[i][[j]+w[j][i]
+2.i(1<=i<=n)，表示子序列中有i字符x，这个点的点权是-ax
+3.x(0<=x<=9)，表示子序列中有x这个数字，这个点的点权是-(bx-ax)
+选Pij就要选i点和j点，选i点就要选s[i]这个数字，选j点就要选s[j]这个数字
+问题变成从上面三种点中选择若干点使得所选点满足上述关系且总点权最大，问题转化成求最大权闭合子图问题
 */
 #include <cstdio>
 #include <cstring>
@@ -8,8 +14,8 @@ HDU 3879 Base Station (最大权闭合图)
 using namespace std;
 typedef long long ll;
 const int INF = 0x7f7f7f7f;
-const int N = 55010;
-const int M = 200010;
+const int N = 6e3;
+const int M = 1e5;
 
 struct Edge
 {
@@ -85,30 +91,48 @@ int dinic(int s, int t)
 	return flow;
 }
 
+int str[110], a[15], b[15], w[110][110];
 int main()
 {
-	int n, m;
-	while (~scanf("%d%d", &n, &m))
+	int T;
+	scanf("%d", &T);
+	for (int cas = 1; cas <= T; cas++)
 	{
+		int n;
+		scanf("%d", &n);
+		for (int i = 1; i <= n; i++) scanf("%1d", &str[i]);
+		for (int i = 0; i < 10; i++)scanf("%d%d", &a[i], &b[i]);
+		int sum = 0;
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++)
+			{
+				scanf("%d", &w[i][j]);
+				sum += w[i][j];
+			}
+
 		init();
-		int s = n + m + 2, t = n + m + 1;
+		int s = 0;
+		int ss = n * (n - 1) / 2;
+		int t = ss + n + 11;
+		int cnt = 0;
+		for (int i = 1; i <= n; i++)
+			for (int j = i + 1; j <= n; j++)
+			{
+				cnt++;
+				add(s, cnt, w[i][j] + w[j][i]);
+				add(cnt, ss + i, INF);
+				add(cnt, ss + j, INF);
+			}
 		for (int i = 1; i <= n; i++)
 		{
-			int p;
-			scanf("%d", &p);
-			add(i, t, p);
+			add(ss + i, t, a[str[i]]);
+			add(ss + i, ss + n + str[i] + 1, INF);
 		}
-		int sum = 0;
-		for (int i = n + 1; i <= n + m; i++)
+		for (int i = 0; i < 10; i++)
 		{
-			int a, b, c;
-			scanf("%d%d%d", &a, &b, &c);
-			add(i, a, INF);
-			add(i, b, INF);
-			add(s, i, c);
-			sum += c;
+			add(ss + n + i + 1, t, b[i] - a[i]);
 		}
-		printf("%d\n", sum - dinic(s, t));
+
+		printf("Case #%d: %d\n", cas, sum - dinic(s, t));
 	}
-	return 0;
 }

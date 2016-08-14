@@ -1,25 +1,7 @@
-/*
-Segment tree
-
-build(i, left, right)
-qudate(i, left, right, key)
-query(i, left, right)
-
-PS:
-	1. 全部自顶向下，递归
-	2. update, 累加时用+=， 覆盖时用=
-	3. sum可换为maxx等
-	4. 可根据需要添加fa[N]或者P(i)
-*/
-
-#include <cstdio>
-#include <cstring>
-#define N 20
-struct node
+struct Node
 {
 	int l, r, sum, lazy;
 } tree[4 * N];
-int n, m;
 inline int L(int i) { return i << 1; }
 inline int R(int i) { return (i << 1) + 1; }
 void build(int i, int left, int right)
@@ -64,48 +46,3 @@ int query(int i, int left, int right)
 	if (right > mid) sum += query(R(i), left, right);
 	return sum;
 }
-int main()
-{
-	while (~scanf("%d%d", &n, &m))
-	{
-		build(1, 1, n);
-		for (int i = 1; i <= n; i++)
-		{
-			int t;
-			scanf("%d", &t);
-			update(1, i, i, t);
-		}
-		for (int i = 1; i <= n; i++)
-			printf("%d: %d\n", i, query(1, i, i));
-		for (int i = 1; i <= m; i++)
-		{
-			int a, b;
-			scanf("%d%d", &a, &b);
-			printf("%d~%d: %d\n", a, b, query(1, a, b));
-		}
-	}
-	return 0;
-}
-
-/*
-Samele Input
-5 3
-3
-4
-1
-7
-5
-1 5
-3 4
-1 3
-
-Sample Output
-1: 3
-2: 4
-3: 1
-4: 7
-5: 5
-1~5: 20
-3~4: 8
-1~3: 8
-*/

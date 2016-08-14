@@ -1,5 +1,5 @@
 ﻿/*
-HDU 3879 Base Station (最大权闭合图)
+SGU 194 Reactor Cooling (无源汇有上下界求可行流)
 */
 #include <cstdio>
 #include <cstring>
@@ -8,8 +8,8 @@ HDU 3879 Base Station (最大权闭合图)
 using namespace std;
 typedef long long ll;
 const int INF = 0x7f7f7f7f;
-const int N = 55010;
-const int M = 200010;
+const int N = 20000;
+const int M = 1000000;
 
 struct Edge
 {
@@ -57,7 +57,7 @@ int cur[N];
 int dfs(int u, int t, int flow)
 {
 	if (u == t) return flow;
-	for (int &i = cur[u]; i != -1; i = edge[i].next)
+	for (int i = cur[u]; i != -1; i = edge[i].next)
 	{
 		Edge &e = edge[i];
 		if (e.c && level[e.to] > level[u])
@@ -78,37 +78,48 @@ int dinic(int s, int t)
 	int flow = 0;
 	while (bfs(s, t))
 	{
-		memcpy(cur, head, sizeof(head));
+		for (int i = s; i <= t; i++) cur[i] = head[i];
 		int f;
 		while (f = dfs(s, t, INF)) flow += f;
 	}
 	return flow;
 }
 
+int du[N], down[N];
+
 int main()
 {
 	int n, m;
-	while (~scanf("%d%d", &n, &m))
+	scanf("%d%d", &n, &m);
+	init();
+	int s = 0, t = n + 1;
+	memset(du, 0, sizeof(du));
+	for (int i = 0; i < m; i++)
 	{
-		init();
-		int s = n + m + 2, t = n + m + 1;
-		for (int i = 1; i <= n; i++)
-		{
-			int p;
-			scanf("%d", &p);
-			add(i, t, p);
-		}
-		int sum = 0;
-		for (int i = n + 1; i <= n + m; i++)
-		{
-			int a, b, c;
-			scanf("%d%d%d", &a, &b, &c);
-			add(i, a, INF);
-			add(i, b, INF);
-			add(s, i, c);
-			sum += c;
-		}
-		printf("%d\n", sum - dinic(s, t));
+		int u, v, b, c;
+		scanf("%d%d%d%d", &u, &v, &b, &c);
+		add(u, v, c - b);
+		du[u] -= b;
+		du[v] += b;
+		down[i] = b;
 	}
+	int sum = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		if (du[i] > 0)
+		{
+			add(s, i, du[i]);
+			sum += du[i];
+		}
+		else if (du[i] < 0) add(i, t, -du[i]);
+	}
+
+	if (dinic(s, t) < sum)
+	{
+		printf("NO\n");
+		return 0;
+	}
+	printf("YES\n");
+	for (int i = 0; i < m; i++) printf("%d\n", down[i] + edge[2 * i + 1].c);
 	return 0;
 }

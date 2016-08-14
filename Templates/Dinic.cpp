@@ -44,7 +44,7 @@ int cur[N];
 int dfs(int u, int t, int flow)
 {
 	if (u == t) return flow;
-	for (int i = cur[u]; i != -1; i = edge[i].next)
+	for (int &i = cur[u]; i != -1; i = edge[i].next)
 	{
 		Edge &e = edge[i];
 		if (e.c && level[e.to] > level[u])
@@ -65,7 +65,7 @@ int dinic(int s, int t)
 	int flow = 0;
 	while (bfs(s, t))
 	{
-		for (int i = s; i <= t; i++) cur[i] = head[i];
+		memcpy(cur, head, sizeof(head));
 		int f;
 		while (f = dfs(s, t, INF)) flow += f;
 	}
