@@ -1,53 +1,38 @@
-//graph-head-weight
-struct Edge
-{
-	int to, w, next;
-} e[N * 2];
-int head[N], tol;
-int n, m;
-
-void add(int u, int v, int w)
-{
-	e[tol].to = v;
-	e[tol].w = w;
-	e[tol].next = head[u];
-	head[u] = tol++;
-}
-
-scanf("%d%d", &n, &m);
-memset(head, -1, sizeof(head));
-tol = 0;
-for (int i = 1; i <= m; i++)
-{
-	int a, b, w;
-	scanf("%d%d%d", &a, &b, &w);
-	add(a, b, w);
-}
-
 //graph-head
 struct Edge
 {
 	int to, next;
-} e[N * 2];
-int head[N], num;
-int n, m;
-
+} edge[2 * N];
+int head[N], no;
+void init()
+{
+	memset(head, -1, sizeof(head));
+	no = 0;
+}
 void add(int u, int v)
 {
-	e[num].to = v;
-	e[num].next = head[u];
-	head[u] = num++;
+	edge[no].to = v; 
+	edge[no].next = head[u];
+	head[u] = no++;
 }
 
-scanf("%d%d", &n, &m);
-memset(head, -1, sizeof(head));
-num = 0;
-for (int i = 1; i <= m; i++)
+//graph-head-weight
+struct Edge
 {
-	int a, b;
-	scanf("%d%d", &a, &b);
-	add(a, b);
-	add(b, a);
+	int to, w, next;
+} edge[2 * N];
+int head[N], no;
+void init()
+{
+	memset(head, -1, sizeof(head));
+	no = 0;
+}
+void add(int u, int v, int w)
+{
+	edge[no].to = v;
+	edge[no].w = w;
+	edge[no].next = head[u];
+	head[u] = no++;
 }
 
 //graph-vec-weight
