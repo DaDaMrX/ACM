@@ -1,5 +1,5 @@
 ﻿/*
-Codeforces 486C Palindrome Transformation (水)
+Codeforces 486C Palindrome Transformation
 1.更改字符操作的次数是确定的，要让光标移动的次数尽可能少
 2.字符串是循环的，从n右移到1再向右移与从n直接向左移效果相同，但从n到1多走一步，
 在中间同理，故要让光标不越界，只在半个区间内移动

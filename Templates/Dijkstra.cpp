@@ -5,6 +5,15 @@ struct Edge
 	Edge(int to, int w) : to(to), w(w) {};
 };
 vector<Edge> vec[N];
+void init(int n)
+{
+	for (int i = 1; i <= n; i++) vec[i].clear();
+}
+void add(int u, int v, int w)
+{
+	vec[u].push_back(Edge(v, w));
+}
+
 int dis[N];
 typedef pair<int, int> pii;
 priority_queue<pii, vector<pii>, greater<pii> > pq;

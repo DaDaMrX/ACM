@@ -31,6 +31,7 @@
 * HDU 2066
 * HDU 1232
 * POJ 2633
+* HDU 1495 数论
 * POJ 1061 数论
 * POJ 2773 数论
 * POJ 2142 数论
@@ -58,6 +59,7 @@
 * HDU 2874 LCA
 * HDU 3078 LCA
 * HDU 5452 LCA
+* CodeForces 696D AC自动机
 * HDU 2296 AC自动机
 * HDU 3341 AC自动机
 * HDU 3247 AC自动机
@@ -74,10 +76,12 @@
 * POJ 3415 后缀数组
 * POJ 3294 后缀数组
 * SPOJ 220 后缀数组
+* UVA 10829 后缀数组
 * POJ 2396 网络流
 * HDU 4862 网络流
 * HDU 5352 网络流
 * POJ 2826 计算几何
+* POJ 1263 计算几何
 * CodeForces 500D 树
 * CodeForces 5521 状压搜索
 * POJ 1556 计算几何
