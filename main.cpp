@@ -1,40 +1,33 @@
+/*
+CodeForces 630I Parking Lot (组合数学)
+ans = 3 * (3 * n - 1) * pow(4, n - 3)
+*/
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
-#include <cmath>
 using namespace std;
 const int INF = 0x7f7f7f7f;
 const int N = 1e6 + 10;
+typedef long long ll;
+
+ll pow(ll a, ll n)
+{
+    ll ans = 1;
+    while (n)
+    {
+        if (n & 1) ans *= a;
+        a *= a;
+        n >>= 1;
+    }
+    return ans;
+}
 
 int main()
 {
-    int T;
-    scanf("%d", &T);
-    while (T--)
+    int n;
+    while (~scanf("%d", &n))
     {
-        int g, l;
-        scanf("%d%d", &g, &l);
-        if (l % g)
-        {
-            printf("0\n");
-            continue;
-        }
-
-        int n = l / g;
-        int ans = 1;
-
-        int s = sqrt(n);
-        for (int i = 2; i <= s; i++)
-            if (n % i == 0)
-            {
-                int r = 0;
-                while (n % i == 0) n /= i, r++;
-                ans *= r * 6;
-                s = sqrt(n);
-            }
-        if (n > 1) ans *= 6;
-
-        printf("%d\n", ans);
+        printf("%I64d\n", 3 * (3 * n - 1) * pow(4, n - 3));
     }
     return 0;
 }
