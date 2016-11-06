@@ -44,6 +44,7 @@ ll mod_pow(ll a, ll b, ll p)
 	}
 	return ans;
 }
+
 bool witness(ll a, ll n)
 {
 	ll m = n - 1;
@@ -76,6 +77,7 @@ bool Miller_Rabin(ll n)
 	}
 	return true;
 }
+
 ll Pollard_Rho(ll n, int c)
 {
 	ll x = 2, y = 2, d = 1;

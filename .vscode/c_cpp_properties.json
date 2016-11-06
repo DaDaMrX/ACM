@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": ["C:/MinGW/lib/gcc/mingw32/5.3.0/include/c++", "C:/MinGW/include"],
+            "browse" : {
+                "limitSymbolsToIncludedHeaders" : true,
+                "databaseFilename" : ""
+            }
+        }
+    ]
+}

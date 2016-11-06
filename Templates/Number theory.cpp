@@ -1,25 +1,68 @@
-int extgcd(int a, int b, int &x, int &y)
+//扩展欧几里得 O(1)
+//PS: 系数不唯一要处理
+int ext_gcd(int a, int b, int &x, int &y)
 {
 	if (b == 0)
 	{
 		x = 1; y = 0;
 		return a;
 	}
-	else
-	{
-		int d = extgcd(b, a % b, y, x);
-		y -= (a / b) * x;
-		return d;
-	}
+	int d = ext_gcd(b, a % b, y, x);
+	y -= (a / b) * x;
+	return d;
 }
 
+//辗转相除 O(1)
 int gcd(int a, int b)
 {
-	if (b == 0) return a;
-	return gcd(b, a % b);
+	return b ? gcd(b, a % b) : a;
 }
 
-//求欧拉函数值
+//快速幂 O(logn)
+//PS: 有a*a运算，有溢出的可能
+ll power(ll a, ll n, ll m)
+{
+	ll ans = 1;
+	while (n)
+	{
+		if (n & 1) ans = ans * a % m;
+		a = a * a % m;
+		n >>= 1;
+	}
+	return ans;
+}
+
+//素分解 O(sqrt(n))
+int s = sqrt(n);
+for (int i = 2; i <= s; i++)
+	if (n % i == 0)
+	{
+		int r = 0;
+		while (n % i == 0) n /= i, r++;
+		printf("%d %d\n", i, r);
+		s = sqrt(n);
+	}
+if (n > 1) printf("%d %d\n", n, 1);
+
+//素分解 O(n)
+//放到map中
+map<int, int> factor;
+map<int, int>::iterator iter;
+void get_factor(int n)
+{
+	factor.clear();
+	int s = sqrt(n);
+	for (int i = 2; i <= s; i++)
+		if (n % i == 0)
+		{
+			while (n % i == 0) n /= i, factor[i]++;
+			s = sqrt(n);
+		}
+	if (n > 1) factor[n]++;
+}
+
+//求欧拉函数值 O(sqrt(n))
+//核心为素分解
 int phi(int n)
 {
 	int ans = n;
@@ -34,7 +77,6 @@ int phi(int n)
 	if (n > 1) ans = ans / n * (n - 1);
 	return ans;
 }
-
 
 //线性筛欧拉函数*
 int phi[N], prime[N];
@@ -58,7 +100,8 @@ void get_euler(int n)
 	}
 }
 
-//大数取模
+//大数取模 O(n)
+//输入时用到
 int mod(char s[], int len, int m)
 {
 	long long ans = 0;
@@ -67,7 +110,8 @@ int mod(char s[], int len, int m)
 	return ans;
 }
 
-//大数分段取模
+//大数分段取模*
+//输入特别大时用到
 int change(char s[], int len, int sum, int a[])
 {
 	int n = (len / sum) + (len % sum > 0);
@@ -123,25 +167,7 @@ void get_factor(int n)
 			factor[prime[i]] += n / j;
 }
 
-//素分解
-map<int, int> factor;
-map<int, int>::iterator iter;
-void get_factor(int n)
-{
-	factor.clear();
-	int s = sqrt(n);
-	for (int i = 2; i <= s; i++)
-		if (n % i == 0)
-		{
-			while (n % i == 0)
-			{
-				n /= i;
-				factor[i]++;
-			}
-			s = sqrt(n);
-		}
-	if (n > 1) factor[n]++;
-}
+
 
 //中国剩余定理 模不互素
 int k;

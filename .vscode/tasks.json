@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "command": "cmd",
+    "isShellCommand": true,
+    "args": ["/c"],
+    "showOutput": "silent",
+    "tasks":[
+        {
+            "taskName": "build",
+            "args": ["g++", "${fileBasename}", "-o", "${fileBasename}.exe"],
+            "isBuildCommand": true,
+            "suppressTaskName": true,
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceRoot}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "taskName": "test",
+            "args": ["${fileBasename}.exe"],
+            "suppressTaskName": true,
+            "isTestCommand": true
+        },
+        {
+            "taskName": "g++_-g",
+            "args": ["g++", "${fileBasename}", "-g", "-o", "${fileBasename}.exe"],
+            "suppressTaskName": true        
+        }
+    ]
+}
