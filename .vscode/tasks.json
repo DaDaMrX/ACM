@@ -27,7 +27,7 @@
         },
         {
             "taskName": "test",
-            "args": ["${fileBasename}.exe"],
+            "args": ["${fileBasename}.exe", "<in.txt"],
             "suppressTaskName": true,
             "isTestCommand": true
         },
