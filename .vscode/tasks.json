@@ -9,7 +9,7 @@
     "tasks":[
         {
             "taskName": "build",
-            "args": ["g++", "${fileBasename}", "-o", "${fileBasename}.exe"],
+            "args": ["g++", "${fileBasename}", "-o", "${fileBasename}.exe", "&&", "${fileBasename}.exe", "<in.txt"],
             "isBuildCommand": true,
             "suppressTaskName": true,
             "problemMatcher": {

@@ -32,6 +32,16 @@ ll power(ll a, ll n, ll m)
 	return ans;
 }
 
+//判素数 O(sqrt(n))
+bool prime(int n)
+{
+	if (n == 0 || n == 1) return false;
+	int s = sqrt(n);
+	for (int i = 2; i <= s; i++)
+		if (n % i == 0) return false;
+	return true; 
+}
+
 //素分解 O(sqrt(n))
 int s = sqrt(n);
 for (int i = 2; i <= s; i++)
