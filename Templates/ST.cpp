@@ -1,3 +1,10 @@
+/*
+ST表
+O(nlogn)预处理，静态查询区间最小值（下标）/最大值（下标）/最大最小值之差
+
+1. 数组a[]，输入的数据
+*/
+
 //RMQ最大值（最小值）
 int a[N];
 int dp[N][20], lg[N];
@@ -72,3 +79,22 @@ int rmq(int left, int right)
 }
 
 //RMQ最大值（最小值）下标从0开始 ？
+
+
+//Usage
+int main()
+{
+	int n;
+	scanf("%d%d", &n);
+	for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+
+	ST(n);
+	scanf("%d", &m)
+	while (m--)
+	{
+		int l, r;
+		scanf("%d%d", &l, &r);
+		printf("%d\n", rmq(l, r));
+	}
+	return 0;
+}

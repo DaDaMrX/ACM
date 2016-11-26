@@ -1,18 +1,23 @@
 struct Edge
 {
-	int to, w;
+	int to, w, next;
 	Edge() {};
-	Edge(int to, int w) : to(to), w(w) {};
-};
-vector<Edge> vec[N];
-void init(int n)
+	Edge(int to, int next): to(to), next(next) {};
+} edge[M];
+int adj[N], no;
+void init()
 {
-	for (int i = 1; i <= n; i++) vec[i].clear();
+	memset(adj, -1, sizeof(adj));
+	no = 0;
 }
 void add(int u, int v, int w)
 {
-	vec[u].push_back(Edge(v, w));
+	edge[no].to = v;
+	edge[no].w = w;
+	edge[no].next = adj[u];
+	adj[u] = no++;
 }
+int n;
 
 int dis[N];
 typedef pair<int, int> pii;
@@ -28,9 +33,9 @@ void dijkstra(int start)
 		pii p = pq.top(); pq.pop();
 		int u = p.second;
 		if (dis[u] < p.first) continue;
-		for (int i = 0; i < vec[u].size(); i++)
+		for (int i = adj[u]; i != -1; i = edge[i].next)
 		{
-			Edge &e = vec[u][i];
+			Edge &e = edge[i];
 			int sum = dis[u] + e.w;
 			if (sum < dis[e.to])
 			{
