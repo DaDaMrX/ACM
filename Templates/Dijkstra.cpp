@@ -1,10 +1,31 @@
+/*
+堆优化的Dijkstra O(nlogn)
+
+1.用邻接表adj[]存储图
+2.存储结构中不需要节点数n和边数m变量，在main函数中临时定义即可
+3.调用时只需给出起点start，因为采用邻接矩阵，编号从1到n或者从0到n-1均可
+4.输出start到每个点的最短距离，放在dis[]数组中
+*/
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <queue>
+using namespace std;
+typedef long long ll;
+const int INF = 0x7f7f7f7f;
+const int N = 1e3 + 10;
+const int M = 1e3 + 10;
+
+//Copy Begin
+
 struct Edge
 {
 	int to, w, next;
 	Edge() {};
-	Edge(int to, int next): to(to), next(next) {};
+	Edge(int to, int w, int next): to(to), w(w), next(next) {};
 } edge[M];
 int adj[N], no;
+
 void init()
 {
 	memset(adj, -1, sizeof(adj));
@@ -12,12 +33,9 @@ void init()
 }
 void add(int u, int v, int w)
 {
-	edge[no].to = v;
-	edge[no].w = w;
-	edge[no].next = adj[u];
+	edge[no] = Edge(v, w, adj[u]);
 	adj[u] = no++;
 }
-int n;
 
 int dis[N];
 typedef pair<int, int> pii;
@@ -45,6 +63,48 @@ void dijkstra(int start)
 		}
 	}
 }
+
+//Copy End
+
+int main()
+{
+	//1.建图：输入节点数n，边数m
+	int n, m;
+	scanf("%d%d", &n, &m);
+	init(); //初始化图
+	while (m--)
+	{
+		int u, v, w;
+		scanf("%d%d%d", &u, &v, &w);
+		add(u, v, w);
+	}
+
+	//2.调用
+	dijkstra(1);
+
+	//3.输出dis[]
+	for (int i = 1; i <= n; i++) printf("%d ", dis[i]);
+	return 0;
+}
+
+/*
+Sample Input
+5 10
+1 2 10
+1 4 5
+2 3 1
+2 4 2
+3 5 4
+4 2 3
+4 3 9
+4 5 2
+5 1 7
+5 3 6
+
+Sample Output
+0 8 9 5 7 
+
+*/
 
 
 int dis[N], pre[N];
