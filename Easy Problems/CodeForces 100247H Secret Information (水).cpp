@@ -1,5 +1,5 @@
 /*
-CodeForces 110247H Secret Information (水)
+CodeForces 100247H Secret Information (水)
 找连续对应字符不同的子串的段数
 */
 #include <cstdio>

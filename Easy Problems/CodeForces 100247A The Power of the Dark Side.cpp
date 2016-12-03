@@ -1,5 +1,5 @@
 /*
-CodeForces 110247D Hamming Distance (水)
+CodeForces 100247D Hamming Distance (水)
 */
 #include <cstdio>
 #include <cstring>

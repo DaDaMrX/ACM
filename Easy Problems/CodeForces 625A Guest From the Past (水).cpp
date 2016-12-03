@@ -1,12 +1,10 @@
 /*
 CodeForces 625A Guest From the Past (水)
-如果塑料瓶饮料价格a小于玻璃瓶饮料净价格b-c，则全买a，相等也全买a
-
-否则，优先买b-c，但要注意，当剩余钱数大于b-c但小于b的时候，就不能买b-c了，
-为保证每次都能顺利买b-c，现在n当中减去一个b，然后全买b-c，在用减去的那个b买一个b-c，
-最后，剩下的钱如果还能买的话就再全买a
-
-特判：当b-c<a,但n-b为负数的情况，即b-c便宜，但钱数却不够b，就只能买a了
+1. 如果塑料瓶饮料价格a小于玻璃瓶饮料净价格b-c，则全买a，相等也全买a
+2. 否则，优先买b-c，但要注意，当剩余钱数大于b-c但小于b的时候，就不能买b-c了，
+为保证每次都能顺利买b-c，先在n当中减去一个c，然后全买b-c，ans = (n-c)/(b-c),
+此时剩余的钱数(n-c)%(b-c)+c < b，不够买一瓶b饮料，此时再全部买a，ans += ((n-c)%(b-c)+c)/a
+3. 特判：当b-c<a且n<c时，n-c为负，此时只能买a
 */
 #include <cstdio>
 #include <cstring>
@@ -24,18 +22,13 @@ int main()
 	{
 		printf("%I64d\n", n / a);
 	}
+	else if (n < c)
+	{
+		printf("%I64d\n", n / a);
+	}
 	else
 	{
-		if (n < b)
-		{
-			printf("%I64d\n", n / a);
-			return 0;
-		}
-		ll ans = 0;
-		ans = (n - b) / (b - c) + 1;
-		ll left = (n - b) % (b - c) + c;
-		ans += left / a;
-		printf("%I64d\n", ans);
+		printf("%I64d\n", (n - c) / (b - c) + ((n - c) % (b - c) + c) / a);
 	}
 	return 0;
 }
