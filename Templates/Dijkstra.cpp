@@ -1,5 +1,5 @@
 /*
-堆优化的Dijkstra O(nlogn)
+1.堆优化的Dijkstra O(nlogn)
 
 1.用邻接表adj[]存储图
 2.存储结构中不需要节点数n和边数m变量，在main函数中临时定义即可
@@ -16,8 +16,7 @@ const int INF = 0x7f7f7f7f;
 const int N = 1e3 + 10;
 const int M = 1e3 + 10;
 
-//Copy Begin
-
+//********************Copy Begin********************
 struct Edge
 {
 	int to, w, next;
@@ -63,8 +62,7 @@ void dijkstra(int start)
 		}
 	}
 }
-
-//Copy End
+//********************Copy End********************
 
 int main()
 {
@@ -106,6 +104,14 @@ Sample Output
 
 */
 
+/*****************************************************************/
+
+/*
+2.输出路径
+
+多加一个pre[]数组 
+多加一个path()函数
+*/
 
 int dis[N], pre[N];
 typedef pair<int, int> pii;
@@ -113,9 +119,8 @@ priority_queue<pii, vector<pii>, greater<pii> > pq;
 void dijkstra(int start)
 {
 	memset(dis, 0x7f, sizeof(dis));
-    memset(pre, -1, sizeof(pre));
+	memset(pre, -1, sizeof(pre));
 	dis[start] = 0;
-    pre[start] = -1;
 	while (!pq.empty()) pq.pop();
 	pq.push(pii(0, start));
 	while (!pq.empty())
@@ -123,27 +128,82 @@ void dijkstra(int start)
 		pii p = pq.top(); pq.pop();
 		int u = p.second;
 		if (dis[u] < p.first) continue;
-        for (int i = adj[u]; i != -1; i = edge[i].next)
+		for (int i = adj[u]; i != -1; i = edge[i].next)
 		{
 			Edge &e = edge[i];
 			int sum = dis[u] + e.w;
-			if (sum < dis[e.v])
+			if (sum < dis[e.to])
 			{
-				dis[e.v] = sum;
-                pre[e.v] = u;
-				pq.push(pii(dis[e.v], e.v));
+				dis[e.to] = sum;
+				pre[e.to] = u;
+				pq.push(pii(dis[e.to], e.to));
 			}
 		}
 	}
 }
 
-void output_path(int start, int finish)
+void path(int u, int v)
 {
-    if (start == finish)
+    if (u == v)
     {
-        printf("%s", name[start]);
+        printf("%d", u);
         return;
     }
-    output_path(start, pre[finish]);
-    printf("-%s", name[finish]);
+    path(u, pre[v]);
+    printf(" %d", v);
 }
+
+int main()
+{
+	//1.建图：输入节点数n，边数m
+	int n, m;
+	scanf("%d%d", &n, &m);
+	init(); //初始化图
+	while (m--)
+	{
+		int u, v, w;
+		scanf("%d%d%d", &u, &v, &w);
+		add(u, v, w);
+	}
+
+	//2.调用
+	dijkstra(1);
+
+	//3.查询路径
+	int q;
+	scanf("%d", &q);
+	while (q--)
+	{
+		int v;
+		scanf("%d", &v);
+		path(1, v);
+		printf("\n");
+	}
+	return 0;
+}
+
+/*
+Sample Input
+5 10
+1 2 10
+1 4 5
+2 3 1
+2 4 2
+3 5 4
+4 2 3
+4 3 9
+4 5 2
+5 1 7
+5 3 6
+5
+1 2 3 4 5
+
+Sample Output
+0 8 9 5 7 
+-1 4 2 1 4 
+1
+1 4 2
+1 4 2 3
+1 4
+1 4 5
+*/

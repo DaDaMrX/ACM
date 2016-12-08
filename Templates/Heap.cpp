@@ -1,6 +1,8 @@
 /*
 priority_queue
 */
+#include <queueu>
+#include <functional>
 priority_queue<int> q;
 priority_queue<int, vector<int>, greater<int> > q;
 
@@ -12,13 +14,16 @@ push(x)
 top()
 pop()
 */
-int heap[N], size;
+int heap[N], n;
 
 inline int L(int i) { return i << 1; }
 inline int R(int i) { return (i << 1) + 1;}
 inline int P(int i) { return i >> 1; }
 
-inline void init() { size = 0; }
+void init() 
+{ 
+    n = 0;
+}
 
 void up(int i)
 {
@@ -31,8 +36,8 @@ void up(int i)
 }
 void push(int x)
 {
-    heap[++size] = x;
-    up(size);
+    heap[++n] = x;
+    up(n);
 }
 
 int top()
@@ -43,8 +48,8 @@ int top()
 void down(int i)
 {
     int mini = i;
-    if (L(i) <= size && heap[L(i)] < heap[mini]) mini = L(i);
-    if (R(i) <= size && heap[R(i)] < heap[mini]) mini = R(i);
+    if (L(i) <= n && heap[L(i)] < heap[mini]) mini = L(i);
+    if (R(i) <= n && heap[R(i)] < heap[mini]) mini = R(i);
     if (mini != i)
     {
         swap(heap[i], heap[mini]);
@@ -53,6 +58,6 @@ void down(int i)
 }
 void pop()
 {
-    heap[1] = heap[size--];
+    heap[1] = heap[n--];
     down(1);
 }

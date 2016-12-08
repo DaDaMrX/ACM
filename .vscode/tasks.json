@@ -1,17 +1,14 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "0.1.0",
     "command": "cmd",
     "isShellCommand": true,
     "args": ["/c"],
-    "showOutput": "silent",
-    "tasks":[
+    "showOutput": "always",
+    "tasks": [
         {
-            "taskName": "build",
-            "args": ["g++", "${fileBasename}", "-o", "${fileBasename}.exe", "&&", "${fileBasename}.exe", "<in.txt"],
-            "isBuildCommand": true,
+            "taskName": "Complie",
             "suppressTaskName": true,
+            "args": ["g++", "main.cpp", "-g", "-o", "main.exe"],
             "problemMatcher": {
                 "owner": "cpp",
                 "fileLocation": ["relative", "${workspaceRoot}"],
@@ -26,15 +23,28 @@
             }
         },
         {
-            "taskName": "test",
-            "args": ["${fileBasename}.exe", "<in.txt"],
+            "taskName": "Complie && Run",
             "suppressTaskName": true,
-            "isTestCommand": true
+            "args": ["g++", "main.cpp", "-o", "main.exe", "&&", "main.exe", "<in.txt"],
+            "isBuildCommand": true,
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceRoot}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
         },
         {
-            "taskName": "g++_-g",
-            "args": ["g++", "${fileBasename}", "-g", "-o", "${fileBasename}.exe"],
-            "suppressTaskName": true        
+            "taskName": "Run",
+            "suppressTaskName": true,
+            "args": ["main.exe", "<in.txt"],
+            "isTestCommand": true
         }
     ]
 }
