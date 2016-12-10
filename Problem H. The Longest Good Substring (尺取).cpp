@@ -15,35 +15,37 @@ int map[26];
 
 int main()
 {
-    //freopen("input.txt", "r", stdin);
-    //freopen("output.txt", "w", stdout);
-    freopen("in.txt", "r", stdin);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     scanf("%d%s", &k, s + 1);
     int len = strlen(s + 1);
     memset(map, 0, sizeof(map));
-    int left = 1, right = 1, cnt = 0, ans = 0;
+    int left = 1, right = 1, cnt = 0, ans = 1, left_index = 1;
     while (true)
     {
-        while (right <= len && cnt <= k)
+        while (right <= len)
         {
+			if (cnt == k && map[s[right] - 'a'] == 0) break;
             map[s[right] - 'a']++;
             if (map[s[right] - 'a'] == 1) cnt++;
             right++;
         }
-        ans = max(ans, right - left - 1);
-        if (cnt <= k) break;
 
-        right--;
-        map[s[right] - 'a']--;
-        if (map[s[right] - 'a'] == 0) cnt--;
+		if (right - left > ans)
+		{
+			ans = right - left;
+			left_index = left;
+		}
 
-        while (left <= right && cnt > k)
+		if (right > len) break;
+
+        while (left <= right && cnt == k)
         {
             map[s[left] - 'a']--;
             if (map[s[left] - 'a'] == 0) cnt--;
-            left++;
+			left++;
         }
     }
-    printf("%d\n", ans);
+    printf("%d %d\n", left_index, left_index + ans - 1);
     return 0;
 }
