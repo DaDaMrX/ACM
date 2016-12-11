@@ -54,7 +54,7 @@ for (int i = 2; i <= s; i++)
 	}
 if (n > 1) printf("%d %d\n", n, 1);
 
-//素分解 O(n)
+//素分解 O(sqrt(n))
 //放到map中
 map<int, int> factor;
 map<int, int>::iterator iter;
