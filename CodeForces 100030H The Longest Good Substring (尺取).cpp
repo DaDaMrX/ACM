@@ -1,5 +1,5 @@
 /************************************************************
-Problem H. The Longest Good Substring (尺取)
+CodeForces 100030H The Longest Good Substring (尺取)
 ************************************************************/
 #include <cstdio>
 #include <cstring>

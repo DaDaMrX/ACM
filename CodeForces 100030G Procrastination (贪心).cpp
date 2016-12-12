@@ -1,5 +1,5 @@
 /************************************************************
-Problem G. Procrastination (贪心)
+CodeForces 100030G Procrastination (贪心)
 ************************************************************/
 #include <cstdio>
 #include <cstring>

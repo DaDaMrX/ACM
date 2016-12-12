@@ -1,5 +1,5 @@
 /********************************************************************************
-Problem I. Prohibition
+
 ********************************************************************************/
 #include <cstdio>
 #include <cstring>
@@ -9,7 +9,7 @@ typedef long long ll;
 const int INF = 0x7f7f7f7f;
 const int N = 1e3 + 10;
 
-aaa
+
 
 int main()
 {

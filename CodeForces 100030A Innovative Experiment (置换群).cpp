@@ -1,5 +1,5 @@
 /********************************************************************************
-Problem A. Innovative Experiment (置换群)
+CodeForces 100030A Innovative Experiment (置换群)
 ********************************************************************************/
 #include <cstdio>
 #include <cstring>
