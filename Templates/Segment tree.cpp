@@ -1,9 +1,14 @@
+/*
+sum
+*/
 struct Node
 {
 	int l, r, sum, lazy;
 } tree[4 * N];
+
 inline int L(int i) { return i << 1; }
 inline int R(int i) { return (i << 1) + 1; }
+
 void build(int i, int left, int right)
 {
 	tree[i].l = left; tree[i].r = right;
@@ -13,6 +18,7 @@ void build(int i, int left, int right)
 	build(L(i), left, mid);
 	build(R(i), mid + 1, right);
 }
+
 void pushdown(int i)
 {
 	if (!tree[i].lazy) return;
@@ -22,6 +28,7 @@ void pushdown(int i)
 	tree[R(i)].lazy += tree[i].lazy;
 	tree[i].lazy = 0;
 }
+
 void update(int i, int left, int right, int key)
 {
 	if (left <= tree[i].l && right >= tree[i].r)
@@ -36,6 +43,7 @@ void update(int i, int left, int right, int key)
 	if (right > mid) update(R(i), left, right, key);
 	tree[i].sum = tree[L(i)].sum + tree[R(i)].sum;
 }
+
 int query(int i, int left, int right)
 {
 	if (left <= tree[i].l && right >= tree[i].r) return tree[i].sum;
@@ -46,3 +54,66 @@ int query(int i, int left, int right)
 	if (right > mid) sum += query(R(i), left, right);
 	return sum;
 }
+
+
+/*
+max
+*/
+struct Node
+{
+	int l, r, max, lazy;
+} tree[4 * N];
+
+inline int L(int i) { return i << 1; }
+inline int R(int i) { return (i << 1) + 1; }
+
+void build(int i, int left, int right)
+{
+	tree[i].l = left; tree[i].r = right;
+	tree[i].max = 0; tree[i].lazy = 0;
+	if (left == right) return;
+	int mid = left + (right - left >> 1);
+	build(L(i), left, mid);
+	build(R(i), mid + 1, right);
+}
+
+void pushdown(int i)
+{
+	if (!tree[i].lazy) return;
+	tree[L(i)].max += tree[i].lazy;
+	tree[L(i)].lazy += tree[i].lazy;
+	tree[R(i)].max += tree[i].lazy;
+	tree[R(i)].lazy += tree[i].lazy;
+	tree[i].lazy = 0;
+}
+
+void update(int i, int left, int right, int key)
+{
+	if (left <= tree[i].l && right >= tree[i].r)
+	{
+		tree[i].max += key;
+		tree[i].lazy += key;
+		return;
+	}
+	pushdown(i);
+	int mid = tree[i].l + (tree[i].r - tree[i].l >> 1);
+	if (left <= mid) update(L(i), left, right, key);
+	if (right > mid) update(R(i), left, right, key);
+	tree[i].max = max(tree[L(i)].max, tree[R(i)].max);
+}
+
+int query(int i, int left, int right)
+{
+	if (left <= tree[i].l && right >= tree[i].r) return tree[i].max;
+	pushdown(i);
+	int ans = -INF;
+	int mid = tree[i].l + (tree[i].r - tree[i].l >> 1);
+	if (left <= mid) ans = max(ans, query(L(i), left, right));
+	if (right > mid) ans = max(ans, query(R(i), left, right));
+	return ans;
+}
+
+/*
+min
+*/
+
