@@ -261,8 +261,8 @@ void bellman(int start)
 }
 
 //floyd-map
-int map[N][N];
 int n, m;
+int map[N][N];
 
 void floyd()
 {
