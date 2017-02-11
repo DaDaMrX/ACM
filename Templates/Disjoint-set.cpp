@@ -1,14 +1,12 @@
-/*
-Disjoint-set
-*/
 int fa[N], deep[N];
-void init(int n)
+void init()
 {	
-	for (int i = 1; i <= n; i++) fa[i] = i, deep[i] = 0;
+	memset(fa, -1, sizeof(fa));
+	memset(deep, 0, sizeof(deep));
 }
 int find(int x)
 {
-	if (fa[x] == x) return x;
+	if (fa[x] == -1) return x;
 	return fa[x] = find(fa[x]);
 }
 void unite(int x, int y)

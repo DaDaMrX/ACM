@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 typedef long long ll;
-const int INF = 0x7f7f7f7f;
+const int INF = 0x3f3f3f3f;
 const int N = 1e3 + 10;
 
 
