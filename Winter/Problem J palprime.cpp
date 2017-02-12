@@ -14,16 +14,6 @@ int btoi(char s[])
 {
 	int len = strlen(s);
 	int ans = 0;
-	for (int i = len - 1; i >= 0; i--)
-		if (s[i] == '1')
-			ans += 1 << (len - 1 - i);
-	return ans;
-}
-
-int btoi(char s[])
-{
-	int len = strlen(s);
-	int ans = 0;
 	for (int i = 0; i < len; i++) 
 	{
 		ans <<= 1;

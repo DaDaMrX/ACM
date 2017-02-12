@@ -38,20 +38,14 @@ bool same(int x, int y)
 
 struct Edge
 {
-	int to, next;
+	int from, to, next;
+	bool flag;
 	Edge() {};
-	Edge(int to, int next): to(to), next(next) {};
+	Edge(int from, int to, bool flag, int next): 
+		from(from), to(to), flag(flag), next(next) {};
 } edge[M];
 int adj[N], no;
 int bridge;
-
-struct EDGE
-{
-	int u, v;
-	bool bri;
-	EDGE() {}
-	EDGE(int u, int v, bool bri): u(u), v(v), bri(bri) {};
-} e[M];
 
 void init()
 {
@@ -60,8 +54,7 @@ void init()
 }
 void add(int u, int v)
 {
-	edge[no] = Edge(v, adj[u]);
-	e[no] = EDGE(u, v, false);
+	edge[no] = Edge(u, v, false, adj[u]);
 	adj[u] = no++;
 }
 
@@ -90,8 +83,8 @@ void tarjan(int u, int from)
 
 			if (low[v] > dfn[u])
 			{
-				e[i].bri = true;
-				e[i ^ 1].bri = true;
+				edge[i].flag = true;
+				edge[i ^ 1].flag = true;
 				bridge++;
 			}
 			else unite(u, v);
@@ -139,7 +132,7 @@ int main()
 		scanf("%d%d", &n, &m);
 		init();
 		for (int i = 1; i <= m; i++)
-{
+		{
 			int u, v;
 			scanf("%d%d", &u, &v);
 			add(u, v); 
@@ -160,10 +153,10 @@ int main()
 		init();
 		int start;
 		for (int i = 0; i < 2 * m; i++)
-			if (e[i].bri)
+			if (edge[i].flag)
 			{
-				int u = find(e[i].u);
-				int v = find(e[i].v);
+				int u = find(edge[i].from);
+				int v = find(edge[i].to);
 				add(u, v);
 				add(v, u);
 				start = u;

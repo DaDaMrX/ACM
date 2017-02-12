@@ -66,19 +66,13 @@ void tarjan(int u)
 ********************************************************************************/
 struct Edge
 {
-	int to, next;
+	int from, to, next;
+	bool flag;
 	Edge() {};
-	Edge(int to, int next): to(to), next(next) {};
+	Edge(int from, int to, bool flag, int next): 
+		from(from), to(to), flag(flag), next(next) {};
 } edge[M];
 int adj[N], no;
-
-struct EDGE
-{
-	int u, v;
-	bool bri;
-	EDGE() {}
-	EDGE(int u, int v, bool bri): u(u), v(v), bri(bri) {};
-} e[M];
 int bridge;
 
 void init()
@@ -88,12 +82,11 @@ void init()
 }
 void add(int u, int v)
 {
-	edge[no] = Edge(v, adj[u]);
-	e[no] = EDGE(u, v, false);
+	edge[no] = Edge(u, v, false, adj[u]);
 	adj[u] = no++;
 }
 
-int dfn[N], low[N];
+int dfn[N], low[N], con[N];
 int index, cnt;
 stack<int> s;
 bool instack[N];
@@ -103,7 +96,6 @@ void init_tarjan()
 	index = cnt = 0;
 	while (!s.empty()) s.pop();
 	memset(instack, false, sizeof(instack));
-	bridge = 0;
 }
 void tarjan(int u, int from)
 {
@@ -116,10 +108,11 @@ void tarjan(int u, int from)
 		{
 			tarjan(v, u);
 			low[u] = min(low[u], low[v]);
+
 			if (low[v] > dfn[u])
 			{
-				e[i].bri = true;
-				e[i ^ 1].bri = true;
+				edge[i].flag = true;
+				edge[i ^ 1].flag = true;
 				bridge++;
 			}
 			//else unite(u, v);
