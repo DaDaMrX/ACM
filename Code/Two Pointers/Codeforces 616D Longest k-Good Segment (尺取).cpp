@@ -10,43 +10,54 @@ Codeforces 616D Longest k-Good Segment (尺取)
 #include <algorithm>
 using namespace std;
 typedef long long ll;
-const int INF = 0x7f7f7f7f;
-const int N = 1e6 + 10;
+const int INF = 0x3f3f3f3f;
+const int N = 5e5 + 10;
+const int M = 1e6 + 10;
 
 int n, k;
 int a[N];
-int flag[N];
+
+int cnt[M];
 
 int main()
 {
 	scanf("%d%d", &n, &k);
-	for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+	for (int i = 1; i <= n; i++) scanf("%d", a + i);
 
-	memset(flag, 0, sizeof(flag));
-	int left = 1, right = 1, cnt = 0;
-	int ans = 0, ans_left, ans_right;
-	while (right <= n)
+	memset(cnt, 0, sizeof(cnt));
+	int ans = 0, ansl, ansr;
+	int l = 1, r = 1, num = 0;
+	while (l <= n)
 	{
-		flag[a[right]]++;
-		if (flag[a[right]] == 1) cnt++;
-		right++;
-
-		while (cnt > k)
+		while (r <= n && num <= k)
 		{
-			flag[a[left]]--;
-			if (flag[a[left]] == 0) cnt--;
-			left++;
+			cnt[a[r]]++;
+			if (cnt[a[r]] == 1) num++;
+			r++;
+		}
+		if (num <= k)
+		{
+			if (r - l > ans)
+			{
+				ans = r - l;
+				ansl = l;
+				ansr = r - 1;
+			}
+			break;
 		}
 
-		int len = right - left;
-		if (len > ans)
+		if (r - 1 - l > ans)
 		{
-			ans = len;
-			ans_left = left;
-			ans_right = right - 1;
+			ans = r - 1 - l;
+			ansl = l;
+			ansr = r - 2;
 		}
+
+		cnt[a[l]]--;
+		if (cnt[a[l]] == 0) num--;
+		l++;
 	}
 
-	printf("%d %d\n", ans_left, ans_right);
+	printf("%d %d\n", ansl, ansr);
 	return 0;
 }

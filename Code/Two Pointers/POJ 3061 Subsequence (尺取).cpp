@@ -39,3 +39,19 @@ int main()
 	}
 	return 0;
 }
+
+
+
+
+int ans = INF;
+int l = 1, r = 1, sum = 0;
+while (true)
+{
+	while (r <= n && sum < k) sum += a[r++];
+	if (sum < k) break;
+	ans = min(ans, r - l);
+	sum -= a[l++];
+}
+
+
+

@@ -1,3 +1,4 @@
+//CodeForces 765A Neverending competitions 
 #include <cstdio>
 #include <cstring>
 #include <algorithm>

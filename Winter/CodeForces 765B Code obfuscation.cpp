@@ -1,3 +1,4 @@
+//CodeForces 765B Code obfuscation
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
