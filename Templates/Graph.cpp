@@ -1,132 +1,26 @@
-//graph-head
+// Graph without edge weight
 struct Edge
 {
 	int to, next;
-} edge[2 * N];
-int head[N], no;
+	Edge() {};
+	Edge(int to, int next): to(to), next(next) {};
+} edge[M];
+int adj[N], no;
+
 void init()
 {
-	memset(head, -1, sizeof(head));
+	memset(adj, -1, sizeof(adj));
 	no = 0;
 }
 void add(int u, int v)
 {
-	edge[no].to = v; 
-	edge[no].next = head[u];
-	head[u] = no++;
+	edge[no] = Edge(v, adj[u]);
+	adj[u] = no++;
 }
 
-//graph-head-weight
-struct Edge
-{
-	int to, w, next;
-} edge[2 * N];
-int head[N], no;
-void init()
-{
-	memset(head, -1, sizeof(head));
-	no = 0;
-}
-void add(int u, int v, int w)
-{
-	edge[no].to = v;
-	edge[no].w = w;
-	edge[no].next = head[u];
-	head[u] = no++;
-}
 
-//graph-vec-weight
-struct Edge
-{
-	int to, w;
-	Edge() {};
-	Edge(int to, int w) : to(to), w(w) {};
-};
-vector<Edge> vec[N];
-int n, m;
 
-scanf("%d%d", &n, &m);
-for (int i = 1; i <= n; i++) vec[i].clear();
-for (int i = 1; i <= m; i++)
-{
-	int a, b, w;
-	scanf("%d%d%d", &a, &b, &w);
-	vec[a].push_back(Edge(b, w));
-	vec[b].push_back(Edge(a, w));
-}
-
-//graph-map
-int map[N][N]
-int n, m;
-
-scanf("%d%d", &n, &m);
-memset(map, 0x7f, sizeof(map));
-for (int i = 1; i <= m; i++)
-{
-	int a, b, w;
-	scanf("%d%d%d", &a, &b, &w);
-	if (w < map[a][b]) map[a][b] = map[b][a] = w;
-}
-
-//dijkstra-priority_queue-vec
-#include <queue>
-struct Edge
-{
-	int to, w;
-	Edge() {};
-	Edge(int to, int w) : to(to), w(w) {};
-};
-vector<Edge> vec[N];
-int n, m;
-
-int dis[N];
-typedef pair<int, int> pii;
-priority_queue<pii, vector<pii>, greater<pii> > pq;
-void dijkstra(int start)
-{
-	memset(dis, 0x7f, sizeof(dis));
-	dis[start] = 0;
-	while (!pq.empty()) pq.pop();
-	pq.push(pii(0, start));
-	while (!pq.empty())
-	{
-		pii p = pq.top(); pq.pop();
-		int u = p.second;
-		if (dis[u] < p.first) continue;
-		for (int j = 0; j < vec[u].size(); j++)
-		{
-			Edge e = vec[u][j];
-			int sum = dis[u] + e.w;
-			if (sum < dis[e.to])
-			{
-				dis[e.to] = sum;
-				pq.push(pii(dis[e.to], e.to));
-			}
-		}
-	}
-}
-
-//dijkstra-map
-int map[N][N], dis[N];
-bool vis[N];
-int n, m;
-void dijkstra(int start)
-{
-	memset(dis, 0x7f, sizeof(dis));
-	dis[start] = 0;
-	memset(vis, false, sizeof(vis));
-	for (int i = 1; i <= n; i++)
-	{
-		int mini = -1;
-		for (int j = 1; j <= n; j++)
-			if (!vis[j] && (mini == -1 || dis[j] < dis[mini])) mini = j;
-		vis[mini] = true;
-		for (int j = 1; j <= n; j++)
-			if (map[mini][j] < INF)
-				dis[j] = min(dis[j], dis[mini] + map[mini][j]);
-	}
-}
-
+/**************************************************/
 //dijkstra-priority_queue-vec-second shortest path
 #include <queue>
 struct Edge

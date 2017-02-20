@@ -1,25 +1,28 @@
-//扩展欧几里得 O(1)
-//PS: 系数不唯一要处理
-int ext_gcd(int a, int b, int &x, int &y)
+int gcd(int a, int b)
+{
+	return b ? gcd(b, a % b) : a;
+}
+
+ll ext_gcd(ll a, ll b, ll &x, ll &y)
 {
 	if (b == 0)
 	{
 		x = 1; y = 0;
 		return a;
 	}
-	int d = ext_gcd(b, a % b, y, x);
+	ll d = ext_gcd(b, a % b, y, x);
 	y -= (a / b) * x;
 	return d;
 }
 
-//辗转相除 O(1)
-int gcd(int a, int b)
+ll inverse(ll a, ll mod)
 {
-	return b ? gcd(b, a % b) : a;
+    ll x, y;
+    ext_gcd(a, mod, x, y);
+    x = (x % mod + mod) % mod;
+    return x;
 }
 
-//快速幂 O(logn)
-//PS: 有a*a运算，有溢出的可能
 ll power(ll a, ll n, ll m)
 {
 	ll ans = 1;

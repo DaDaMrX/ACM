@@ -20,8 +20,8 @@ const int M = 1e3 + 10;
 struct Edge
 {
 	int to, w, next;
-	Edge() {};
-	Edge(int to, int w, int next): to(to), w(w), next(next) {};
+	Edge() {}
+	Edge(int to, int w, int next): to(to), w(w), next(next) {}
 } edge[M];
 int adj[N], no;
 
