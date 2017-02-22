@@ -96,35 +96,39 @@ int query_sum(int i, int left, int right)
 struct Node
 {
 	int l, r;
-    int max;
-	int id;
+    int maxi;
     int lazy;
 } tree[4 * N];
+int n, a[N];
+
 inline int L(int i) { return i << 1; }
 inline int R(int i) { return (i << 1) + 1; }
 
 void build(int i, int left, int right)
 {
 	tree[i].l = left; tree[i].r = right;
-	tree[i].max = 0;
-	tree[i].id = left;
-    tree[i].lazy = 0;
-	if (left == right) return;
+	tree[i].lazy = 0;
+	
+	if (left == right)
+	{
+		tree[i].maxi = a[left] >= a[right] ? left : right;
+		return;
+	}
+	
 	int mid = left + (right - left >> 1);
 	build(L(i), left, mid);
 	build(R(i), mid + 1, right);
+
+	int lmaxi = tree[L(i)].maxi;
+	int rmaxi = tree[R(i)].maxi;
+	tree[i].maxi = a[lmaxi] >= a[rmaxi] ? lmaxi : rmaxi;
 }
 
 void pushdown(int i)
 {
 	if (!tree[i].lazy) return;
-
-	tree[L(i)].max += tree[i].lazy;
 	tree[L(i)].lazy += tree[i].lazy;
-
-	tree[R(i)].max += tree[i].lazy;
 	tree[R(i)].lazy += tree[i].lazy;
-
 	tree[i].lazy = 0;
 }
 
@@ -132,48 +136,35 @@ void update(int i, int left, int right, int key)
 {
 	if (left <= tree[i].l && right >= tree[i].r)
 	{
-		tree[i].max += key;
 		tree[i].lazy += key;
 		return;
 	}
+	
 	pushdown(i);
 	int mid = tree[i].l + (tree[i].r - tree[i].l >> 1);
 	if (left <= mid) update(L(i), left, right, key);
 	if (right > mid) update(R(i), left, right, key);
-	int lmax = tree[L(i)].max, rmax = tree[R(i)].max;
-	if (lmax >= rmax)
-	{
-		tree[i].max = lmax;
-		tree[i].id = tree[L(i)].id;
-	}
-	else
-	{
-		tree[i].max = rmax;
-		tree[i].id = tree[R(i)].id;
-	}
+	
+	int lmaxi = tree[L(i)].maxi;
+	int rmaxi = tree[R(i)].maxi;
+	tree[i].maxi = a[lmaxi] >= a[rmaxi] ? lmaxi : rmaxi;
 }
 
-int query_max(int i, int left, int right, int& id)
+int query_maxi(int i, int left, int right)
 {
-	if (left <= tree[i].l && right >= tree[i].r) 
-	{
-		id = tree[i].id;
-		return tree[i].max;
-	}
+	if (left <= tree[i].l && right >= tree[i].r) return tree[i].maxi;
 	pushdown(i);
-	int maxx = -INF;
+	int maxi = -1;
 	int mid = tree[i].l + (tree[i].r - tree[i].l >> 1);
 	if (left <= mid)
 	{
-		int lid;
-		int lmax = query_max(L(i), left, right, lid);
-		if (lmax > maxx) maxx = lmax, id = lid;
+		int lmaxi = query_maxi(L(i), left, right);
+		if (maxi == -1 || a[lmaxi] > a[maxi]) maxi = lmaxi;
 	}
 	if (right > mid)
 	{
-		int rid;
-		int rmax = query_max(R(i), left, right, rid);
-		if (rmax > maxx) maxx = rmax, id = rid;
+		int rmaxi = query_maxi(R(i), left, right);
+		if (maxi == -1 || a[rmaxi] > a[maxi]) maxi = rmaxi;
 	}
-	return maxx;
+	return maxi;
 }
