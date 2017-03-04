@@ -1,3 +1,129 @@
+/*****************Newest************/
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+typedef long long ll;
+const int INF = 0x3f3f3f3f;
+const int N = 1e5 + 10;
+
+struct Node
+{
+	int l, r;
+    int sum;
+    int lazy;
+} tree[4 * N];
+int fa[N], a[N];
+
+inline int L(int i) { return i << 1; }
+inline int R(int i) { return (i << 1) + 1; }
+inline int P(int i) { return i >> 1; }
+
+void build(int i, int left, int right)
+{
+	tree[i].l = left; tree[i].r = right;
+    tree[i].lazy = 0;
+	if (left == right)
+	{
+		tree[i].sum = a[left];
+		fa[left] = i;
+		return;
+	}
+	int mid = left + (right - left >> 1);
+	build(L(i), left, mid);
+	build(R(i), mid + 1, right);
+	tree[i].sum = tree[L(i)].sum + tree[R(i)].sum;
+}
+
+void pushdown(int i)
+{
+	if (!tree[i].lazy) return;
+
+	tree[L(i)].sum += (tree[L(i)].r - tree[L(i)].l + 1) * tree[i].lazy;
+	tree[L(i)].lazy += tree[i].lazy;
+
+	tree[R(i)].sum += (tree[R(i)].r - tree[R(i)].l + 1) * tree[i].lazy;
+	tree[R(i)].lazy += tree[i].lazy;
+
+	tree[i].lazy = 0;
+}
+
+void update(int i, int left, int right, int key)
+{
+	if (left <= tree[i].l && right >= tree[i].r)
+	{
+		tree[i].sum += (tree[i].r - tree[i].l + 1) * key;
+		tree[i].lazy += key;
+		return;
+	}
+	pushdown(i);
+	int mid = tree[i].l + (tree[i].r - tree[i].l >> 1);
+	if (left <= mid) update(L(i), left, right, key);
+	if (right > mid) update(R(i), left, right, key);
+    tree[i].sum = tree[L(i)].sum + tree[R(i)].sum;
+}
+
+void update(int i)
+{
+	if (i == 1) return;
+	i = P(i);
+	tree[i].sum = tree[L(i)].sum + tree[R(i)].sum;
+	update(i);
+}
+
+int query(int i, int left, int right)
+{
+	if (left <= tree[i].l && right >= tree[i].r) return tree[i].sum;
+	pushdown(i);
+	int sum = 0;
+	int mid = tree[i].l + (tree[i].r - tree[i].l >> 1);
+	if (left <= mid) sum += query(L(i), left, right);
+	if (right > mid) sum += query(R(i), left, right);
+	return sum;
+}
+
+int main()
+{
+	freopen("in.txt", "r", stdin);
+	int n;
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++) scanf("%d", a + i);
+	build(1, 1, n);
+	int m;
+	scanf("%d", &m);
+	while (m--)
+	{
+		char s[3];
+		scanf("%s", s);
+		if (s[0] == 'u')
+		{
+			int l, r, a;
+			scanf("%d%d%d", &l, &r, &a);
+			update(1, l, r, a);
+		}
+		else if (s[0] == 'q')
+		{
+			int l, r;
+			scanf("%d%d", &l, &r);
+			int ans = query(1, l, r);
+			printf("%d\n", ans);
+		}
+		else if (s[0] == 'i')
+		{
+			int id, key;
+			scanf("%d%d", &id, &key);
+			a[id] += key;
+			tree[fa[id]].sum += key;
+			update(fa[id]);
+			printf("tree 3: %d\n", tree[3].sum);
+		}
+	}
+	return 0;
+}
+
+/*******************************************************/
+
 struct Node
 {
 	int l, r;

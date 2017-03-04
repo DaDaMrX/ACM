@@ -1,14 +1,14 @@
 {
     "version": "0.1.0",
-    "command": "cmd",
+    "command": "bash",
     "isShellCommand": true,
-    "args": ["/c"],
+    "args": ["-c"],
     "showOutput": "always",
     "tasks": [
         {
-            "taskName": "ComplieRun",
+            "taskName": "CompileRun",
             "suppressTaskName": true,
-            "args": ["g++", "main.cpp", "&&", "a.exe", "<in.txt"],
+            "args": ["g++ main.cpp && ./a.out <in.txt"],
             "isBuildCommand": true,
             "problemMatcher": {
                 "owner": "cpp",
@@ -23,30 +23,10 @@
                 }
             }
         },
-
         {
-            "taskName": "Complie-g",
+            "taskName": "Compile-g",
             "suppressTaskName": true,
-            "args": ["g++", "main.cpp", "-g"],
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceRoot}"],
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
-                }
-            }
-        },
-        
-        {
-            "taskName": "Run",
-            "suppressTaskName": true,
-            "args": ["main.exe", "<in.txt"],
-            "isTestCommand": true
+            "args": ["g++ main.cpp -g"]
         }
     ]
 }
