@@ -10,6 +10,8 @@ const int N = 1e3 + 10;
 
 int main()
 {
-	
+	const char *p = "abcdefg";
+	while (*p) 
+		printf("%c", *p++);
 	return 0;
 }
