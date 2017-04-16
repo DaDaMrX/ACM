@@ -2,8 +2,6 @@
 struct Edge
 {
 	int to, next;
-	Edge() {};
-	Edge(int to, int next): to(to), next(next) {};
 } edge[M];
 int adj[N], no;
 
@@ -12,12 +10,13 @@ void init()
 	memset(adj, -1, sizeof(adj));
 	no = 0;
 }
+
 void add(int u, int v)
 {
-	edge[no] = Edge(v, adj[u]);
+	edge[no].to = v;
+	edge[no].next = adj[u];
 	adj[u] = no++;
 }
-
 
 
 /**************************************************/

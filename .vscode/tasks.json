@@ -8,7 +8,7 @@
         {
             "taskName": "CompileRun",
             "suppressTaskName": true,
-            "args": ["g++ main.cpp && ./a.out <in.txt"],
+            "args": ["g++ main.cpp && ./a.out <in.txt && rm ./a.out"],
             "isBuildCommand": true,
             "problemMatcher": {
                 "owner": "cpp",

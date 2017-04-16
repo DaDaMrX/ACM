@@ -35,6 +35,44 @@ ll power(ll a, ll n, ll m)
 	return ans;
 }
 
+struct Matrix
+{
+	ll a[N][N], n;
+	Matrix() {}
+	Matrix(int n, ll x = 0) : n(n)
+	{
+		memset(a, 0, sizeof(a));
+		for (int i = 1; i <= n; i++) a[i][i] = x;
+	}
+	ll* operator[](int i)
+	{
+		return a[i];
+	}
+};
+
+Matrix multi(Matrix &A, Matrix &B, int mod)
+{
+	int n = A.n;
+	Matrix C(n);
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++)
+			for (int k = 1; k <= n; k++)
+				C[i][j] = (C[i][j] + A[i][k] * B[k][j] % mod) % mod;
+	return C;
+}
+
+Matrix power(Matrix A, int n, int mod)
+{
+	Matrix C(A.n, 1);
+	while (n)
+	{
+		if (n & 1) C = multi(C, A, mod);
+		A = multi(A, A, mod);
+		n >>= 1;
+	}
+	return C;
+}
+
 //判素数 O(sqrt(n))
 bool prime(int n)
 {
