@@ -1,6 +1,3 @@
-/*
-HDU 1257 最少拦截系统
-*/
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
