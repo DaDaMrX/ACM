@@ -23,6 +23,15 @@ ll inverse(ll a, ll mod)
     return x;
 }
 
+// 线性筛逆元
+ll inv[N];
+void get_inv(int n, int mod)
+{
+    inv[1] = 1;
+    for (int i = 2; i < n; i++)
+        inv[i] = (mod - mod / i) * inv[mod % i] % mod;
+}
+
 ll power(ll a, ll n, ll m)
 {
 	ll ans = 1;
@@ -34,6 +43,8 @@ ll power(ll a, ll n, ll m)
 	}
 	return ans;
 }
+
+
 
 struct Matrix
 {

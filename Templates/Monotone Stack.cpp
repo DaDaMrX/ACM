@@ -1,3 +1,15 @@
+void monotone(int n)
+{
+    int t = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        while (t > 0 && a[st[t - 1]] >= a[i]) t--;
+        l[i] = t == 0 ? -1 : st[t - 1];
+        st[t++] = i;
+    }
+}
+
+
 int st[N], top;
 int right[N];
 void monotone_left(int n)

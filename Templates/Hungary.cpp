@@ -35,6 +35,7 @@ bool dfs(int u)
 	{
 		Edge &e = edge[i];
 		if (vis[e.to]) continue;
+		vis[e.to] = true;
 		if (match[e.to] == -1 || dfs(match[e.to]))
 		{
 			match[e.to] = u;
