@@ -33,6 +33,7 @@ void unite(int x, int y)
 		if (deep[x] == deep[y]) deep[x]++;
 	}
 }
+
 int main()
 {
 	while (scanf("%d%d", &n, &m), n)

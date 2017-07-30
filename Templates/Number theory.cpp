@@ -45,43 +45,64 @@ ll power(ll a, ll n, ll m)
 }
 
 
-
+const int nn = 2;
 struct Matrix
 {
-	ll a[N][N], n;
-	Matrix() {}
-	Matrix(int n, ll x = 0) : n(n)
-	{
-		memset(a, 0, sizeof(a));
-		for (int i = 1; i <= n; i++) a[i][i] = x;
-	}
-	ll* operator[](int i)
-	{
-		return a[i];
-	}
+    ll a[5][5], n;
+    Matrix(ll x = 0, ll b = 0, ll c = 0, ll d = 0)
+    {
+        n = 2;
+        a[1][1] = x; a[1][2] = b;
+        a[2][1] = c; a[2][2] = d;
+    }
+    ll* operator[](int i)
+    {
+        return a[i];
+    }
 };
 
-Matrix multi(Matrix &A, Matrix &B, int mod)
+Matrix operator*(Matrix A, Matrix B)
 {
-	int n = A.n;
-	Matrix C(n);
-	for (int i = 1; i <= n; i++)
-		for (int j = 1; j <= n; j++)
-			for (int k = 1; k <= n; k++)
-				C[i][j] = (C[i][j] + A[i][k] * B[k][j] % mod) % mod;
-	return C;
+    int n = A.n;
+    Matrix C;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+            for (int k = 1; k <= n; k++)
+                C[i][j] = (C[i][j] + A[i][k] * B[k][j] % mod) % mod;
+    return C;
 }
 
-Matrix power(Matrix A, int n, int mod)
+Matrix power(Matrix A, ll n, ll mod)
 {
-	Matrix C(A.n, 1);
-	while (n)
-	{
-		if (n & 1) C = multi(C, A, mod);
-		A = multi(A, A, mod);
-		n >>= 1;
-	}
-	return C;
+    Matrix C(1, 0, 0, 1);
+    while (n)
+    {
+        if (n & 1) C = C * A;
+        A = A * A;
+        n >>= 1;
+    }
+    return C;
+}
+
+
+Matrix operator-(Matrix A, Matrix B)
+{
+    ll n = A.n;
+    Matrix C;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+            C[i][j] = ((A[i][j] - B[i][j]) % mod + mod) % mod;
+    return C;
+}
+
+Matrix operator+(Matrix A, Matrix B)
+{
+    ll n = A.n;
+    Matrix C;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+            C[i][j] = (A[i][j] + B[i][j]) % mod;
+    return C;
 }
 
 //判素数 O(sqrt(n))
@@ -94,33 +115,21 @@ bool prime(int n)
 	return true; 
 }
 
-//素分解 O(sqrt(n))
-int s = sqrt(n);
-for (int i = 2; i <= s; i++)
-	if (n % i == 0)
-	{
-		int r = 0;
-		while (n % i == 0) n /= i, r++;
-		printf("%d %d\n", i, r);
-		s = sqrt(n);
-	}
-if (n > 1) printf("%d %d\n", n, 1);
-
-//素分解 O(sqrt(n))
-//放到map中
-map<int, int> factor;
-map<int, int>::iterator iter;
-void get_factor(int n)
+// 素因子分解 O(sqrt(n))
+// fact[i]表示第i个素因子，num[i]表示第i个素因子的数量
+// 如果之前晒过素数，可以用prime[i]代替i，直接枚举素数，会更快
+int fact[10], num[10], cnt;
+void factorize(int n)
 {
-	factor.clear();
-	int s = sqrt(n);
-	for (int i = 2; i <= s; i++)
-		if (n % i == 0)
-		{
-			while (n % i == 0) n /= i, factor[i]++;
-			s = sqrt(n);
-		}
-	if (n > 1) factor[n]++;
+    cnt = 0;
+    for (int i = 2; i * i <= n; i++)
+        if (n % i == 0)
+        {
+            fact[cnt] = i; num[cnt] = 0;
+            while (n % i == 0) n /= i, num[cnt]++;
+            cnt++;
+        }
+    if (n > 1) fact[cnt] = n, num[cnt++] = 1;
 }
 
 //求欧拉函数值 O(sqrt(n))
